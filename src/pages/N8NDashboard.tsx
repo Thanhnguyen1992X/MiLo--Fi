@@ -1,15 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const N8NDashboard = () => {
-  return (
-    <div style={{width: '100%', height: 'calc(100vh - 60px)'}}>
-      <iframe
-        src="/n8ndashboard.html"
-        title="Pro Widget Dashboard"
-        style={{width: '100%', height: '100%', border: 'none'}}
-      />
-    </div>
-  );
+  useEffect(() => {
+    // Chuyển hướng sang đường dẫn tĩnh
+    window.location.replace("/MiLo--Fi/n8ndashboard");
+  }, []);
+
+  return null; // Không render gì cả vì sẽ redirect ngay lập tức
 };
 
 export default N8NDashboard; 
