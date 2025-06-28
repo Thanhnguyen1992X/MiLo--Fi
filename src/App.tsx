@@ -35,7 +35,7 @@ const App = () => (
             <Route path="/purchase" element={<Purchase />} />
             <Route path="/about" element={<About />} />
             <Route
-              path="/n8ndashboard"
+              path="/MiLo--Fi/#/n8ndashboard"
               element={
                 <ProtectedRoute>
                   <N8NDashboard />
