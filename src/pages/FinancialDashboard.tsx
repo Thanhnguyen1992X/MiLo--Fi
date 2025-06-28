@@ -28,6 +28,15 @@ import { Progress } from '@/components/ui/progress';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
+// Khai báo cho TypeScript biết về custom element
+declare namespace JSX {
+  interface IntrinsicElements {
+    'elevenlabs-convai': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+      'agent-id'?: string;
+    };
+  }
+}
+
 export const FinancialDashboard = () => {
   const mainChartRef = useRef<HTMLDivElement>(null);
   const radarChartRef = useRef<HTMLDivElement>(null);
@@ -997,6 +1006,9 @@ export const FinancialDashboard = () => {
             </div>
           </CardContent>
         </Card>
+        
+        
+       
       </div>
     </Layout>
   );
