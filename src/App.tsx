@@ -24,7 +24,7 @@ const App = () => (
       <AuthProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
+        <HashRouter>
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/financial" element={<FinancialDashboard />} />
@@ -44,7 +44,7 @@ const App = () => (
             />
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </BrowserRouter>
+        </HashRouter>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
