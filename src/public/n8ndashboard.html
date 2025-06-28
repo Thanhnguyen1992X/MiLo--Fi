@@ -1,0 +1,2175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Financial Dashboard</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#3b82f6',secondary:'#10b981'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Inter', sans-serif;
+background-color: #0f172a;
+color: #e2e8f0;
+}
+.market-ticker {
+animation: ticker 30s linear infinite;
+}
+@keyframes ticker {
+0% { transform: translateX(0); }
+100% { transform: translateX(-50%); }
+}
+input[type="range"]::-webkit-slider-thumb {
+appearance: none;
+width: 16px;
+height: 16px;
+background: #3b82f6;
+border-radius: 50%;
+cursor: pointer;
+}
+input[type="checkbox"], input[type="radio"] {
+display: none;
+}
+.custom-checkbox {
+position: relative;
+display: inline-block;
+width: 18px;
+height: 18px;
+background: #1e293b;
+border-radius: 4px;
+cursor: pointer;
+}
+.custom-checkbox.checked::after {
+content: "";
+position: absolute;
+top: 3px;
+left: 3px;
+width: 12px;
+height: 12px;
+background: #3b82f6;
+border-radius: 2px;
+}
+.custom-radio {
+position: relative;
+display: inline-block;
+width: 18px;
+height: 18px;
+background: #1e293b;
+border-radius: 50%;
+cursor: pointer;
+}
+.custom-radio.checked::after {
+content: "";
+position: absolute;
+top: 4px;
+left: 4px;
+width: 10px;
+height: 10px;
+background: #3b82f6;
+border-radius: 50%;
+}
+.custom-switch {
+position: relative;
+display: inline-block;
+width: 40px;
+height: 20px;
+background: #1e293b;
+border-radius: 20px;
+cursor: pointer;
+transition: all 0.3s;
+}
+.custom-switch::after {
+content: "";
+position: absolute;
+top: 2px;
+left: 2px;
+width: 16px;
+height: 16px;
+background: #e2e8f0;
+border-radius: 50%;
+transition: all 0.3s;
+}
+.custom-switch.active {
+background: #3b82f6;
+}
+.custom-switch.active::after {
+transform: translateX(20px);
+}
+.widget {
+background-color: #1e293b;
+border: 1px solid #334155;
+border-radius: 8px;
+}
+.widget-header {
+border-bottom: 1px solid #334155;
+}
+.tab-active {
+color: #3b82f6;
+border-bottom: 2px solid #3b82f6;
+}
+.chart-tooltip {
+background: rgba(255, 255, 255, 0.8);
+border-radius: 4px;
+padding: 8px;
+color: #1e293b;
+}
+.scrollbar-hide::-webkit-scrollbar {
+display: none;
+}
+.scrollbar-hide {
+-ms-overflow-style: none;
+scrollbar-width: none;
+}
+</style>
+</head>
+<body class="min-h-screen">
+<!-- Header -->
+<header class="bg-slate-800 border-b border-slate-700">
+<!-- Top Header -->
+<div class="px-6 py-3 flex items-center justify-between">
+<div class="flex items-center">
+<h1 class="text-2xl font-['Pacifico'] text-primary mr-8">MiLO</h1>
+<div class="hidden md:flex space-x-1">
+<button class="px-3 py-2 text-sm text-slate-300 hover:text-white !rounded-button">Stocks</button>
+<button class="px-3 py-2 text-sm text-primary font-medium border-b-2 border-primary !rounded-button">Forex</button>
+<button class="px-3 py-2 text-sm text-slate-300 hover:text-white !rounded-button">Crypto</button>
+<button class="px-3 py-2 text-sm text-slate-300 hover:text-white !rounded-button">Analysis</button>
+<button class="px-3 py-2 text-sm text-slate-300 hover:text-white !rounded-button">Research</button>
+</div>
+</div>
+<div class="flex items-center space-x-4">
+<div class="relative">
+<input type="text" placeholder="Search markets..." class="bg-slate-700 border-none text-sm rounded-lg pl-9 pr-4 py-2 w-64 focus:outline-none focus:ring-2 focus:ring-primary">
+<div class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 flex items-center justify-center text-slate-400">
+<i class="ri-search-line"></i>
+</div>
+</div>
+<div class="flex items-center space-x-3">
+<button class="w-9 h-9 flex items-center justify-center bg-slate-700 rounded-full text-slate-300 hover:bg-slate-600">
+<i class="ri-notification-3-line"></i>
+</button>
+<button class="w-9 h-9 flex items-center justify-center bg-slate-700 rounded-full text-slate-300 hover:bg-slate-600">
+<i class="ri-settings-3-line"></i>
+</button>
+<div class="flex items-center space-x-2">
+<div class="w-9 h-9 bg-primary rounded-full flex items-center justify-center text-white font-medium">
+<button class="text-sm font-medium hidden md:inline">ML</button>
+</div>
+<span class="text-sm font-medium hidden md:inline">MiLO</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Market Ticker -->
+<div class="bg-slate-900 py-2 overflow-hidden">
+<div class="market-ticker flex items-center whitespace-nowrap">
+<div class="flex items-center space-x-8">
+<div class="flex items-center">
+<span class="text-xs font-medium mr-2">S&P 500</span>
+<span class="text-xs text-green-400">5,236.42 +0.85%</span>
+</div>
+<div class="flex items-center">
+<span class="text-xs font-medium mr-2">NASDAQ</span>
+<span class="text-xs text-green-400">16,742.39 +1.12%</span>
+</div>
+<div class="flex items-center">
+<span class="text-xs font-medium mr-2">DOW</span>
+<span class="text-xs text-red-400">38,671.23 -0.23%</span>
+</div>
+<div class="flex items-center">
+<span class="text-xs font-medium mr-2">EUR/USD</span>
+<span class="text-xs text-green-400">1.0845 +0.32%</span>
+</div>
+<div class="flex items-center">
+<span class="text-xs font-medium mr-2">GBP/USD</span>
+<span class="text-xs text-green-400">1.2732 +0.18%</span>
+</div>
+<div class="flex items-center">
+<span class="text-xs font-medium mr-2">USD/JPY</span>
+<span class="text-xs text-red-400">153.42 -0.45%</span>
+</div>
+<div class="flex items-center">
+<span class="text-xs font-medium mr-2">BTC/USD</span>
+<span class="text-xs text-green-400">68,423.15 +2.74%</span>
+</div>
+<div class="flex items-center">
+<span class="text-xs font-medium mr-2">ETH/USD</span>
+<span class="text-xs text-green-400">3,842.67 +1.93%</span>
+</div>
+<div class="flex items-center">
+<span class="text-xs font-medium mr-2">GOLD</span>
+<span class="text-xs text-green-400">2,384.30 +0.65%</span>
+</div>
+<div class="flex items-center">
+<span class="text-xs font-medium mr-2">CRUDE OIL</span>
+<span class="text-xs text-red-400">82.14 -1.27%</span>
+</div>
+</div>
+<div class="flex items-center space-x-8 ml-8">
+<div class="flex items-center">
+<span class="text-xs font-medium mr-2">S&P 500</span>
+<span class="text-xs text-green-400">5,236.42 +0.85%</span>
+</div>
+<div class="flex items-center">
+<span class="text-xs font-medium mr-2">NASDAQ</span>
+<span class="text-xs text-green-400">16,742.39 +1.12%</span>
+</div>
+<div class="flex items-center">
+<span class="text-xs font-medium mr-2">DOW</span>
+<span class="text-xs text-red-400">38,671.23 -0.23%</span>
+</div>
+<div class="flex items-center">
+<span class="text-xs font-medium mr-2">EUR/USD</span>
+<span class="text-xs text-green-400">1.0845 +0.32%</span>
+</div>
+<div class="flex items-center">
+<span class="text-xs font-medium mr-2">GBP/USD</span>
+<span class="text-xs text-green-400">1.2732 +0.18%</span>
+</div>
+<div class="flex items-center">
+<span class="text-xs font-medium mr-2">USD/JPY</span>
+<span class="text-xs text-red-400">153.42 -0.45%</span>
+</div>
+<div class="flex items-center">
+<span class="text-xs font-medium mr-2">BTC/USD</span>
+<span class="text-xs text-green-400">68,423.15 +2.74%</span>
+</div>
+<div class="flex items-center">
+<span class="text-xs font-medium mr-2">ETH/USD</span>
+<span class="text-xs text-green-400">3,842.67 +1.93%</span>
+</div>
+<div class="flex items-center">
+<span class="text-xs font-medium mr-2">GOLD</span>
+<span class="text-xs text-green-400">2,384.30 +0.65%</span>
+</div>
+<div class="flex items-center">
+<span class="text-xs font-medium mr-2">CRUDE OIL</span>
+<span class="text-xs text-red-400">82.14 -1.27%</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="container mx-auto px-4 py-6">
+<!-- Dashboard Controls -->
+<div class="flex justify-between items-center mb-6">
+<div class="flex items-center space-x-4">
+<h2 class="text-xl font-semibold">Forex Dashboard</h2>
+<div class="flex items-center space-x-2">
+<span class="text-sm text-slate-400">June 20, 2025</span>
+<span class="text-xs px-2 py-1 bg-green-500/10 text-green-400 rounded-full">Market Open</span>
+</div>
+</div>
+<div class="flex items-center space-x-3">
+<button class="flex items-center space-x-1 bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded-button text-sm whitespace-nowrap">
+<i class="ri-add-line"></i>
+<span>Add Widget</span>
+</button>
+<button class="flex items-center space-x-1 bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded-button text-sm whitespace-nowrap">
+<i class="ri-layout-grid-line"></i>
+<span>Layout</span>
+</button>
+<button class="flex items-center space-x-1 bg-primary hover:bg-primary/90 px-3 py-1.5 rounded-button text-sm whitespace-nowrap">
+<i class="ri-refresh-line"></i>
+<span>Refresh</span>
+</button>
+</div>
+</div>
+<!-- Main Chart Widget -->
+<div class="widget mb-6">
+<div class="widget-header p-4 flex justify-between items-center">
+<div class="flex items-center space-x-4">
+<h3 class="font-medium">EUR/USD</h3>
+<div class="flex items-center space-x-2">
+<span class="text-xl font-semibold">1.0845</span>
+<span class="text-sm text-green-400">+0.0035 (+0.32%)</span>
+</div>
+</div>
+<div class="flex items-center space-x-3">
+<div class="flex rounded-full bg-slate-700 p-1">
+<button class="px-3 py-1 text-xs rounded-full bg-slate-800 !rounded-button">1H</button>
+<button class="px-3 py-1 text-xs rounded-full bg-slate-800 !rounded-button">4H</button>
+<button class="px-3 py-1 text-xs !rounded-button">1D</button>
+<button class="px-3 py-1 text-xs !rounded-button">1W</button>
+<button class="px-3 py-1 text-xs !rounded-button">1M</button>
+</div>
+<div class="flex items-center space-x-2">
+<button class="w-8 h-8 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded-full">
+<i class="ri-line-chart-line"></i>
+</button>
+<button class="w-8 h-8 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded-full">
+<i class="ri-bar-chart-2-line"></i>
+</button>
+<button class="w-8 h-8 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded-full">
+<i class="ri-more-2-fill"></i>
+</button>
+</div>
+</div>
+</div>
+<div id="mainChart" ></div>
+<!-- TradingView Widget BEGIN -->
+<div id="123"  class="w-full h-96">
+<!-- TradingView Widget END -->
+<!-- TradingView Widget BEGIN -->
+<div id="123" class="tradingview-widget-container" style="height:100%;width:100%">
+  <div id="123" class="tradingview-widget-container__widget" style="height:calc(100% - 32px);width:100%"></div>
+  <div id="123" class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
+  <script id="123" type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+  {
+  "autosize": true,
+  "symbol": "NASDAQ:AAPL",
+  "timezone": "Etc/UTC",
+  "theme": "light",
+  "style": "1",
+  "locale": "en",
+  "range": "YTD",
+  "allow_symbol_change": true,
+  "details": true,
+  "hotlist": true,
+  "show_popup_button": true,
+  "popup_width": "11980",
+  "popup_height": "1200",
+  "support_host": "https://www.tradingview.com"
+}
+};
+123Chart.setOption(123Option);
+// Resize charts when window size changes
+window.addEventListener('resize', function() {
+123Chart.resize();
+});
+});
+</script>
+</div>
+
+<div class="p-4 border-t border-slate-700 flex items-center justify-between">
+<div class="flex items-center space-x-4">
+<button class="flex items-center space-x-1 bg-green-500/10 hover:bg-green-500/20 text-green-400 px-3 py-1.5 rounded-button text-sm whitespace-nowrap">
+<i class="ri-arrow-right-up-line"></i>
+<span>Buy</span>
+</button>
+<button class="flex items-center space-x-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 px-3 py-1.5 rounded-button text-sm whitespace-nowrap">
+<i class="ri-arrow-right-down-line"></i>
+<span>Sell</span>
+</button>
+</div>
+<div class="flex items-center space-x-4">
+<div class="flex items-center space-x-2">
+<span class="text-xs text-slate-400">Spread:</span>
+<span class="text-xs">0.9 pips</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-xs text-slate-400">Volume:</span>
+<span class="text-xs">127.4K</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-xs text-slate-400">Range:</span>
+<span class="text-xs">1.0821 - 1.0859</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Dashboard Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Currency Performance Radar Chart -->
+<div class="widget">
+<div class="widget-header p-4 flex justify-between items-center">
+<h3 class="font-medium">Currency Performance</h3>
+<button class="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-white">
+<i class="ri-more-2-fill"></i>
+</button>
+</div>
+<div id="radarChart" class="w-full h-64"></div>
+<div class="p-3 border-t border-slate-700">
+<div class="flex items-center justify-between text-xs">
+<span class="text-slate-400">Last updated: 12:45 PM</span>
+<button class="text-primary hover:underline">View details</button>
+</div>
+</div>
+</div>
+<!-- Currency Flow Sankey -->
+<div class="widget">
+<div class="widget-header p-4 flex justify-between items-center">
+<h3 class="font-medium">Currency Flow Analysis</h3>
+<button class="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-white">
+<i class="ri-more-2-fill"></i>
+</button>
+</div>
+<div id="sankeyChart" class="w-full h-64"></div>
+<div class="p-3 border-t border-slate-700">
+<div class="flex items-center justify-between text-xs">
+<span class="text-slate-400">Volume: $2.4B</span>
+<button class="text-primary hover:underline">View details</button>
+</div>
+</div>
+</div>
+<!-- Market Distribution -->
+<div class="widget">
+<div class="widget-header p-4 flex justify-between items-center">
+<h3 class="font-medium">Market Distribution</h3>
+<button class="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-white">
+<i class="ri-more-2-fill"></i>
+</button>
+</div>
+<div id="doughnutChart" class="w-full h-64"></div>
+<div class="p-3 border-t border-slate-700">
+<div class="flex items-center justify-between text-xs">
+<span class="text-slate-400">Total Volume: $5.8T</span>
+<button class="text-primary hover:underline">View details</button>
+</div>
+</div>
+</div>
+<!-- Market Overview Widget -->
+<div class="widget">
+<div class="widget-header p-4 flex justify-between items-center">
+<h3 class="font-medium">Market Overview</h3>
+<button class="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-white">
+<i class="ri-more-2-fill"></i>
+</button>
+</div>
+<div class="p-2">
+<div class="overflow-x-auto scrollbar-hide">
+<table class="w-full">
+<thead>
+<tr class="text-xs text-slate-400">
+<th class="px-3 py-2 text-left">Symbol</th>
+<th class="px-3 py-2 text-right">Price</th>
+<th class="px-3 py-2 text-right">Change</th>
+<th class="px-3 py-2 text-right">Change %</th>
+</tr>
+</thead>
+<tbody>
+<tr class="text-sm border-t border-slate-700">
+<td class="px-3 py-3 text-left">EUR/USD</td>
+<td class="px-3 py-3 text-right font-medium">1.0845</td>
+<td class="px-3 py-3 text-right text-green-400">+0.0035</td>
+<td class="px-3 py-3 text-right text-green-400">+0.32%</td>
+</tr>
+<tr class="text-sm border-t border-slate-700">
+<td class="px-3 py-3 text-left">GBP/USD</td>
+<td class="px-3 py-3 text-right font-medium">1.2732</td>
+<td class="px-3 py-3 text-right text-green-400">+0.0023</td>
+<td class="px-3 py-3 text-right text-green-400">+0.18%</td>
+</tr>
+<tr class="text-sm border-t border-slate-700">
+<td class="px-3 py-3 text-left">USD/JPY</td>
+<td class="px-3 py-3 text-right font-medium">153.42</td>
+<td class="px-3 py-3 text-right text-red-400">-0.69</td>
+<td class="px-3 py-3 text-right text-red-400">-0.45%</td>
+</tr>
+<tr class="text-sm border-t border-slate-700">
+<td class="px-3 py-3 text-left">AUD/USD</td>
+<td class="px-3 py-3 text-right font-medium">0.6614</td>
+<td class="px-3 py-3 text-right text-green-400">+0.0028</td>
+<td class="px-3 py-3 text-right text-green-400">+0.42%</td>
+</tr>
+<tr class="text-sm border-t border-slate-700">
+<td class="px-3 py-3 text-left">USD/CAD</td>
+<td class="px-3 py-3 text-right font-medium">1.3642</td>
+<td class="px-3 py-3 text-right text-red-400">-0.0037</td>
+<td class="px-3 py-3 text-right text-red-400">-0.27%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Market Heatmap Widget -->
+<div class="widget">
+<div class="widget-header p-4 flex justify-between items-center">
+<h3 class="font-medium">Currency Strength</h3>
+<button class="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-white">
+<i class="ri-more-2-fill"></i>
+</button>
+</div>
+<div id="heatmapChart" class="w-full h-64"></div>
+<div class="p-3 border-t border-slate-700">
+<div class="flex items-center justify-between text-xs">
+<span class="text-slate-400">Last updated: 12:45 PM</span>
+<button class="text-primary hover:underline">View detailed analysis</button>
+</div>
+</div>
+</div>
+<!-- Economic Calendar Widget -->
+<div class="widget">
+<div class="widget-header p-4 flex justify-between items-center">
+<h3 class="font-medium">Economic Calendar</h3>
+<div class="flex items-center space-x-2">
+<span class="text-xs text-slate-400">June 20, 2025</span>
+<button class="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-white">
+<i class="ri-calendar-line"></i>
+</button>
+</div>
+</div>
+<div class="p-2">
+<div class="overflow-y-auto scrollbar-hide max-h-64">
+<div class="p-2 border-l-4 border-yellow-500 bg-yellow-500/5 rounded mb-2">
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center space-x-2">
+<span class="text-xs font-medium">14:30</span>
+<span class="text-xs px-1.5 py-0.5 bg-yellow-500/20 text-yellow-400 rounded">Medium</span>
+</div>
+<h4 class="text-sm font-medium mt-1">US Initial Jobless Claims</h4>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-xs text-slate-400">Forecast</span>
+<span class="text-sm font-medium">235K</span>
+</div>
+</div>
+</div>
+<div class="p-2 border-l-4 border-red-500 bg-red-500/5 rounded mb-2">
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center space-x-2">
+<span class="text-xs font-medium">15:00</span>
+<span class="text-xs px-1.5 py-0.5 bg-red-500/20 text-red-400 rounded">High</span>
+</div>
+<h4 class="text-sm font-medium mt-1">ECB Interest Rate Decision</h4>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-xs text-slate-400">Forecast</span>
+<span class="text-sm font-medium">3.75%</span>
+</div>
+</div>
+</div>
+<div class="p-2 border-l-4 border-green-500 bg-green-500/5 rounded mb-2">
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center space-x-2">
+<span class="text-xs font-medium">15:30</span>
+<span class="text-xs px-1.5 py-0.5 bg-green-500/20 text-green-400 rounded">Low</span>
+</div>
+<h4 class="text-sm font-medium mt-1">US Philly Fed Manufacturing Index</h4>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-xs text-slate-400">Forecast</span>
+<span class="text-sm font-medium">10.2</span>
+</div>
+</div>
+</div>
+<div class="p-2 border-l-4 border-red-500 bg-red-500/5 rounded">
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center space-x-2">
+<span class="text-xs font-medium">16:00</span>
+<span class="text-xs px-1.5 py-0.5 bg-red-500/20 text-red-400 rounded">High</span>
+</div>
+<h4 class="text-sm font-medium mt-1">ECB Press Conference</h4>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-xs text-slate-400">Duration</span>
+<span class="text-sm font-medium">45 min</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="p-3 border-t border-slate-700">
+<button class="w-full text-xs text-primary hover:underline">View full calendar</button>
+</div>
+</div>
+<!-- Technical Analysis Widget -->
+<div class="widget">
+<div class="widget-header p-4 flex justify-between items-center">
+<h3 class="font-medium">Technical Analysis</h3>
+<div class="flex items-center space-x-2">
+<button class="text-xs px-2 py-1 bg-slate-700 rounded tab-active !rounded-button">EUR/USD</button>
+<button class="text-xs px-2 py-1 text-slate-400 hover:text-white !rounded-button">GBP/USD</button>
+</div>
+</div>
+<div class="p-4">
+<div class="flex justify-between mb-4">
+<div class="text-center px-4 py-3 bg-slate-800 rounded-lg">
+<h4 class="text-xs text-slate-400 mb-1">1 Hour</h4>
+<div class="text-red-400 font-medium">SELL</div>
+</div>
+<div class="text-center px-4 py-3 bg-slate-800 rounded-lg">
+<h4 class="text-xs text-slate-400 mb-1">4 Hour</h4>
+<div class="text-red-400 font-medium">SELL</div>
+</div>
+<div class="text-center px-4 py-3 bg-slate-800 rounded-lg">
+<h4 class="text-xs text-slate-400 mb-1">Daily</h4>
+<div class="text-green-400 font-medium">BUY</div>
+</div>
+<div class="text-center px-4 py-3 bg-slate-800 rounded-lg">
+<h4 class="text-xs text-slate-400 mb-1">Weekly</h4>
+<div class="text-green-400 font-medium">BUY</div>
+</div>
+</div>
+<div id="technicalChart" class="w-full h-40"></div>
+</div>
+<div class="p-4 border-t border-slate-700">
+<div class="grid grid-cols-2 gap-3">
+<div>
+<h4 class="text-xs text-slate-400 mb-2">Moving Averages</h4>
+<div class="flex items-center">
+<div class="w-full bg-slate-700 rounded-full h-2">
+<div class="bg-green-400 h-2 rounded-full" style="width: 64%"></div>
+</div>
+<div class="ml-2 text-xs font-medium">
+<span class="text-green-400">7</span>/<span class="text-red-400">4</span>
+</div>
+</div>
+</div>
+<div>
+<h4 class="text-xs text-slate-400 mb-2">Technical Indicators</h4>
+<div class="flex items-center">
+<div class="w-full bg-slate-700 rounded-full h-2">
+<div class="bg-red-400 h-2 rounded-full" style="width: 36%"></div>
+</div>
+<div class="ml-2 text-xs font-medium">
+<span class="text-green-400">4</span>/<span class="text-red-400">7</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- News Feed Widget -->
+<div class="widget">
+<div class="widget-header p-4 flex justify-between items-center">
+<h3 class="font-medium">Market News</h3>
+<div class="flex items-center space-x-2">
+<button class="text-xs px-2 py-1 bg-slate-700 rounded tab-active !rounded-button">Forex</button>
+<button class="text-xs px-2 py-1 text-slate-400 hover:text-white !rounded-button">Global</button>
+</div>
+</div>
+<div class="p-2">
+<div class="overflow-y-auto scrollbar-hide max-h-80">
+<div class="p-3 border-b border-slate-700">
+<div class="flex items-start">
+<div class="flex-1">
+<h4 class="text-sm font-medium mb-1">ECB Expected to Hold Rates Steady Amid Inflation Concerns</h4>
+<p class="text-xs text-slate-400 mb-2 line-clamp-2">The European Central Bank is expected to maintain current interest rates in today's meeting as inflation remains above target despite recent economic data showing signs of cooling.</p>
+<div class="flex items-center text-xs text-slate-500">
+<span>Bloomberg</span>
+<span class="mx-2">•</span>
+<span>2 hours ago</span>
+</div>
+</div>
+</div>
+</div>
+<div class="p-3 border-b border-slate-700">
+<div class="flex items-start">
+<div class="flex-1">
+<h4 class="text-sm font-medium mb-1">Dollar Weakens as Fed Officials Signal Potential Rate Cut</h4>
+<p class="text-xs text-slate-400 mb-2 line-clamp-2">The US dollar declined against major currencies after Federal Reserve officials hinted at a possible rate cut in September, citing improving inflation metrics and labor market concerns.</p>
+<div class="flex items-center text-xs text-slate-500">
+<span>Reuters</span>
+<span class="mx-2">•</span>
+<span>4 hours ago</span>
+</div>
+</div>
+</div>
+</div>
+<div class="p-3 border-b border-slate-700">
+<div class="flex items-start">
+<div class="flex-1">
+<h4 class="text-sm font-medium mb-1">Bank of Japan Maintains Ultra-Loose Monetary Policy</h4>
+<p class="text-xs text-slate-400 mb-2 line-clamp-2">The Bank of Japan kept its ultra-loose monetary policy unchanged in its latest meeting, continuing to buck the global trend of monetary tightening despite the yen's recent weakness.</p>
+<div class="flex items-center text-xs text-slate-500">
+<span>Financial Times</span>
+<span class="mx-2">•</span>
+<span>6 hours ago</span>
+</div>
+</div>
+</div>
+</div>
+<div class="p-3">
+<div class="flex items-start">
+<div class="flex-1">
+<h4 class="text-sm font-medium mb-1">GBP/USD Rallies on Strong UK Retail Sales Data</h4>
+<p class="text-xs text-slate-400 mb-2 line-clamp-2">The British pound strengthened against the US dollar following better-than-expected UK retail sales data, which showed a 0.8% increase month-over-month, exceeding analyst forecasts of 0.3%.</p>
+<div class="flex items-center text-xs text-slate-500">
+<span>CNBC</span>
+<span class="mx-2">•</span>
+<span>8 hours ago</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="p-3 border-t border-slate-700">
+<button class="w-full text-xs text-primary hover:underline">View all news</button>
+</div>
+</div>
+<!-- Trading Signals Widget -->
+<div class="widget">
+<div class="widget-header p-4 flex justify-between items-center">
+<h3 class="font-medium">Trading Signals</h3>
+<button class="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-white">
+<i class="ri-refresh-line"></i>
+</button>
+</div>
+<div class="p-2">
+<div class="overflow-y-auto scrollbar-hide max-h-80">
+<div class="p-3 border-b border-slate-700">
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center space-x-2">
+<span class="text-sm font-medium">EUR/USD</span>
+<span class="text-xs px-1.5 py-0.5 bg-green-500/20 text-green-400 rounded">BUY</span>
+</div>
+<div class="flex items-center space-x-2 mt-1">
+<span class="text-xs text-slate-400">Entry: 1.0835</span>
+<span class="text-xs text-slate-400">TP: 1.0890</span>
+<span class="text-xs text-slate-400">SL: 1.0805</span>
+</div>
+</div>
+<div class="text-xs text-slate-400">4H</div>
+</div>
+<div class="mt-2">
+<div class="text-xs text-slate-400">Signal strength</div>
+<div class="w-full bg-slate-700 rounded-full h-1.5 mt-1">
+<div class="bg-green-400 h-1.5 rounded-full" style="width: 75%"></div>
+</div>
+</div>
+</div>
+<div class="p-3 border-b border-slate-700">
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center space-x-2">
+<span class="text-sm font-medium">GBP/JPY</span>
+<span class="text-xs px-1.5 py-0.5 bg-red-500/20 text-red-400 rounded">SELL</span>
+</div>
+<div class="flex items-center space-x-2 mt-1">
+<span class="text-xs text-slate-400">Entry: 195.40</span>
+<span class="text-xs text-slate-400">TP: 194.60</span>
+<span class="text-xs text-slate-400">SL: 195.80</span>
+</div>
+</div>
+<div class="text-xs text-slate-400">1D</div>
+</div>
+<div class="mt-2">
+<div class="text-xs text-slate-400">Signal strength</div>
+<div class="w-full bg-slate-700 rounded-full h-1.5 mt-1">
+<div class="bg-red-400 h-1.5 rounded-full" style="width: 85%"></div>
+</div>
+</div>
+</div>
+<div class="p-3">
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center space-x-2">
+<span class="text-sm font-medium">USD/CAD</span>
+<span class="text-xs px-1.5 py-0.5 bg-red-500/20 text-red-400 rounded">SELL</span>
+</div>
+<div class="flex items-center space-x-2 mt-1">
+<span class="text-xs text-slate-400">Entry: 1.3650</span>
+<span class="text-xs text-slate-400">TP: 1.3580</span>
+<span class="text-xs text-slate-400">SL: 1.3685</span>
+</div>
+</div>
+<div class="text-xs text-slate-400">4H</div>
+</div>
+<div class="mt-2">
+<div class="text-xs text-slate-400">Signal strength</div>
+<div class="w-full bg-slate-700 rounded-full h-1.5 mt-1">
+<div class="bg-red-400 h-1.5 rounded-full" style="width: 65%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="p-3 border-t border-slate-700">
+<div class="flex items-center justify-between">
+<span class="text-xs text-slate-400">Last updated: 12:45 PM</span>
+<button class="text-xs text-primary hover:underline">View all signals</button>
+</div>
+</div>
+</div>
+<!-- Personal Strength -->
+<div class="widget">
+<div class="widget-header p-4 flex justify-between items-center">
+<h2 class="font-semibold">Điểm mạnh</h2>
+<div class="flex items-center">
+<span class="text-xs text-gray-500 mr-2">Cập nhật: 18/06/2025</span>
+<button class="text-gray-500 hover:text-primary">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-more-2-fill"></i>
+</div>
+</button>
+</div>
+</div>
+<div class="p-2">
+<div class="space-y-3">
+<div>
+<div class="flex justify-between items-center mb-1">
+<span class="text-xs font-medium">Tăng trưởng doanh thu</span>
+<span class="text-xs font-medium">85%</span>
+</div>
+<div class="progress-bar">
+<div class="progress-fill bg-green-500" style="width: 85%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-1">
+<span class="text-xs font-medium">Biên lợi nhuận</span>
+<span class="text-xs font-medium">72%</span>
+</div>
+<div class="progress-bar">
+<div class="progress-fill bg-green-500" style="width: 72%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-1">
+<span class="text-xs font-medium">ROE</span>
+<span class="text-xs font-medium">68%</span>
+</div>
+<div class="progress-bar">
+<div class="progress-fill bg-green-500" style="width: 68%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-1">
+<span class="text-xs font-medium">Chất lượng tài sản</span>
+<span class="text-xs font-medium">76%</span>
+</div>
+<div class="progress-bar">
+<div class="progress-fill bg-green-500" style="width: 76%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-1">
+<span class="text-xs font-medium">Thanh khoản</span>
+<span class="text-xs font-medium">82%</span>
+</div>
+<div class="progress-bar">
+<div class="progress-fill bg-green-500" style="width: 82%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-1">
+<span class="text-xs font-medium">Quản trị rủi ro</span>
+<span class="text-xs font-medium">79%</span>
+</div>
+<div class="progress-bar">
+<div class="progress-fill bg-green-500" style="width: 79%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-1">
+<span class="text-xs font-medium">Chuyển đổi số</span>
+<span class="text-xs font-medium">90%</span>
+</div>
+<div class="progress-bar">
+<div class="progress-fill bg-green-500" style="width: 90%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Profitability Rank -->
+<div class="widget">
+<div class="widget-header p-4 flex justify-between items-center">
+<h2 class="font-semibold">Xếp hạng khả năng sinh lời</h2>
+<div class="flex items-center">
+<span class="text-xs text-gray-500 mr-2">So với ngành</span>
+<button class="text-gray-500 hover:text-primary">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-more-2-fill"></i>
+</div>
+</button>
+</div>
+</div>
+<div class="p-4">
+<div class="space-y-3">
+<div class="flex items-center">
+<span class="text-xs w-28">ROE</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-4 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 85%"></div>
+</div>
+<span class="ml-2 text-xs font-medium">22.5%</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-28">ROA</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-4 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 75%"></div>
+</div>
+<span class="ml-2 text-xs font-medium">1.8%</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-28">NIM</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-4 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 80%"></div>
+</div>
+<span class="ml-2 text-xs font-medium">4.2%</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-28">CIR</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-4 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 70%"></div>
+</div>
+<span class="ml-2 text-xs font-medium">35.8%</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-28">CASA</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-4 rounded-sm overflow-hidden">
+<div class="bg-yellow-500 h-full" style="width: 60%"></div>
+</div>
+<span class="ml-2 text-xs font-medium">22.4%</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-28">Tỷ lệ nợ xấu</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-4 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 82%"></div>
+</div>
+<span class="ml-2 text-xs font-medium">1.2%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- EPS Value Rank -->
+<div class="widget">
+<div class="widget-header p-4 flex justify-between items-center">
+<h2 class="font-semibold">Xếp hạng EPS</h2>
+<div class="flex items-center">
+<span class="text-xs text-gray-500 mr-2">So với Top 10 ngân hàng</span>
+<button class="text-gray-500 hover:text-primary">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-more-2-fill"></i>
+</div>
+</button>
+</div>
+</div>
+<div class="p-4">
+<div class="space-y-3">
+<div class="flex items-center">
+<span class="text-xs w-28">VCB</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-4 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 95%"></div>
+</div>
+<span class="ml-2 text-xs font-medium">7,250</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-28">TCB</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-4 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 92%"></div>
+</div>
+<span class="ml-2 text-xs font-medium">6,820</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-28">MBB</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-4 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 88%"></div>
+</div>
+<span class="ml-2 text-xs font-medium">6,450</span>
+</div>
+</div>
+<div class="flex items-center font-medium">
+<span class="text-xs w-28 text-primary">MIL</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-4 rounded-sm overflow-hidden">
+<div class="bg-primary h-full" style="width: 85%"></div>
+</div>
+<span class="ml-2 text-xs font-medium text-primary">6,120</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-28">ACB</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-4 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 82%"></div>
+</div>
+<span class="ml-2 text-xs font-medium">5,980</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-28">VPB</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-4 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 78%"></div>
+</div>
+<span class="ml-2 text-xs font-medium">5,640</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-28">HDB</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-4 rounded-sm overflow-hidden">
+<div class="bg-yellow-500 h-full" style="width: 65%"></div>
+</div>
+<span class="ml-2 text-xs font-medium">4,850</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Warning Signs -->
+<div class="widget">
+<div class="widget-header p-4 flex justify-between items-center">
+<h2 class="font-semibold">Tín hiệu cảnh báo</h2>
+<button class="text-gray-500 hover:text-primary">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-more-2-fill"></i>
+</div>
+</button>
+</div>
+<div class="p-4">
+<div class="flex justify-between mb-4">
+<p class="text-xs text-red-700">Giá cổ phiếu đã tăng 15% trong 5 phiên gần nhất, có thể xuất hiện áp lực chốt lời trong ngắn hạn.</p>
+</div>
+<div class="space-y-3">
+<div class="flex items-center">
+<div class="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+<span class="text-xs flex-1">RSI (14) đang ở vùng quá mua</span>
+<span class="text-xs font-medium">72.5</span>
+</div>
+<div class="flex items-center">
+<div class="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+<span class="text-xs flex-1">Khối ngoại bán ròng 5 phiên liên tiếp</span>
+<span class="text-xs font-medium">-125 tỷ</span>
+</div>
+<div class="flex items-center">
+<div class="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
+<span class="text-xs flex-1">P/E cao hơn trung bình ngành</span>
+<span class="text-xs font-medium">+12%</span>
+</div>
+<div class="flex items-center">
+<div class="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
+<span class="text-xs flex-1">Tỷ lệ dự phòng/nợ xấu giảm nhẹ</span>
+<span class="text-xs font-medium">-2.5%</span>
+</div>
+<div class="flex items-center">
+<div class="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
+<span class="text-xs flex-1">Biến động giá cao hơn trung bình 20 phiên</span>
+<span class="text-xs font-medium">+35%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Momentum Rank -->
+<div class="widget">
+<div class="widget-header p-4 flex justify-between items-center">
+<h2 class="font-semibold">Xếp hạng động lượng</h2>
+<div class="flex items-center">
+<span class="text-xs text-gray-500 mr-2">Cập nhật: 20/06/2025</span>
+<button class="text-gray-500 hover:text-primary">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-more-2-fill"></i>
+</div>
+</button>
+</div>
+</div>
+<div class="p-4">
+<div class="grid grid-cols-2 gap-4">
+<div>
+<h3 class="text-xs font-medium mb-2">Chỉ báo kỹ thuật</h3>
+<div class="space-y-2">
+<div class="flex items-center">
+<span class="text-xs w-24">RSI (14)</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-3 rounded-sm overflow-hidden">
+<div class="bg-red-500 h-full" style="width: 72%"></div>
+</div>
+<span class="ml-2 text-xs">72.5</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-24">MACD</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-3 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 65%"></div>
+</div>
+<span class="ml-2 text-xs">+0.35</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-24">Stochastic</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-3 rounded-sm overflow-hidden">
+<div class="bg-red-500 h-full" style="width: 85%"></div>
+</div>
+<span class="ml-2 text-xs">85.2</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-24">ADX</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-3 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 32%"></div>
+</div>
+<span class="ml-2 text-xs">32.4</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-24">CCI</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-3 rounded-sm overflow-hidden">
+<div class="bg-red-500 h-full" style="width: 78%"></div>
+</div>
+<span class="ml-2 text-xs">+156.8</span>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h3 class="text-xs font-medium mb-2">Biến động giá</h3>
+<div class="space-y-2">
+<div class="flex items-center">
+<span class="text-xs w-24">1 tuần</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-3 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 65%"></div>
+</div>
+<span class="ml-2 text-xs text-green-600">+6.5%</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-24">1 tháng</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-3 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 85%"></div>
+</div>
+<span class="ml-2 text-xs text-green-600">+12.8%</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-24">3 tháng</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-3 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 92%"></div>
+</div>
+<span class="ml-2 text-xs text-green-600">+18.5%</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-24">6 tháng</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-3 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 78%"></div>
+</div>
+<span class="ml-2 text-xs text-green-600">+24.2%</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-24">1 năm</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-3 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 95%"></div>
+</div>
+<span class="ml-2 text-xs text-green-600">+42.8%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Dividend & Yield Rank -->
+<div class="widget">
+<div class="widget-header p-4 flex justify-between items-center">
+<h2 class="font-semibold">Xếp hạng cổ tức & Lợi suất</h2>
+<button class="text-gray-500 hover:text-primary">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-more-2-fill"></i>
+</div>
+</button>
+</div>
+<div class="p-4">
+<div class="grid grid-cols-2 gap-4">
+<div>
+<h3 class="text-xs font-medium mb-2">Cổ tức tiền mặt</h3>
+<div class="space-y-2">
+<div class="flex items-center">
+<span class="text-xs w-16">2024E</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-3 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 85%"></div>
+</div>
+<span class="ml-2 text-xs">1,500đ</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-16">2023</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-3 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 75%"></div>
+</div>
+<span class="ml-2 text-xs">1,200đ</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-16">2022</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-3 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 65%"></div>
+</div>
+<span class="ml-2 text-xs">1,000đ</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-16">2021</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-3 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 55%"></div>
+</div>
+<span class="ml-2 text-xs">800đ</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-16">2020</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-3 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 45%"></div>
+</div>
+<span class="ml-2 text-xs">600đ</span>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h3 class="text-xs font-medium mb-2">Lợi suất cổ tức</h3>
+<div class="space-y-2">
+<div class="flex items-center">
+<span class="text-xs w-16">MIL</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-3 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 78%"></div>
+</div>
+<span class="ml-2 text-xs">7.8%</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-16">VCB</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-3 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 45%"></div>
+</div>
+<span class="ml-2 text-xs">4.5%</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-16">TCB</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-3 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 52%"></div>
+</div>
+<span class="ml-2 text-xs">5.2%</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-16">ACB</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-3 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 68%"></div>
+</div>
+<span class="ml-2 text-xs">6.8%</span>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xs w-16">Ngành</span>
+<div class="flex-1 flex items-center">
+<div class="w-full bg-gray-200 h-3 rounded-sm overflow-hidden">
+<div class="bg-green-500 h-full" style="width: 58%"></div>
+</div>
+<span class="ml-2 text-xs">5.8%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- DuPont Analysis -->
+<div class="widget">
+<div class="widget-header p-4 flex justify-between items-center">
+<h2 class="font-semibold">Phân tích DuPont</h2>
+<button class="text-gray-500 hover:text-primary">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-more-2-fill"></i>
+</div>
+</button>
+</div>
+<div class="p-4">
+<div class="flex flex-col items-center">
+<div class="text-center mb-4">
+<div class="text-sm font-medium">ROE</div>
+<div class="text-lg font-bold text-primary">22.5%</div>
+</div>
+<div class="flex items-center justify-center w-full mb-4">
+<div class="w-1/3 h-px bg-gray-300"></div>
+<div class="mx-2 text-gray-500">×</div>
+<div class="w-1/3 h-px bg-gray-300"></div>
+</div>
+<div class="grid grid-cols-2 gap-8 mb-4 w-full">
+<div class="text-center">
+<div class="text-sm font-medium">Net Profit Margin</div>
+<div class="text-lg font-bold text-primary">35.2%</div>
+<div class="flex flex-col items-center mt-2">
+<div class="text-xs text-gray-500">Net Income</div>
+<div class="w-8 h-px bg-gray-300 my-1"></div>
+<div class="text-xs text-gray-500">Revenue</div>
+<div class="text-sm font-medium">7,500 / 21,300</div>
+</div>
+</div>
+<div class="text-center">
+<div class="text-sm font-medium">Asset Turnover</div>
+<div class="text-lg font-bold text-primary">0.64x</div>
+<div class="flex flex-col items-center mt-2">
+<div class="text-xs text-gray-500">Revenue</div>
+<div class="w-8 h-px bg-gray-300 my-1"></div>
+<div class="text-xs text-gray-500">Total Assets</div>
+<div class="text-sm font-medium">21,300 / 33,280</div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-center w-full mb-4">
+<div class="w-1/3 h-px bg-gray-300"></div>
+<div class="mx-2 text-gray-500">×</div>
+<div class="w-1/3 h-px bg-gray-300"></div>
+</div>
+<div class="grid grid-cols-3 gap-4 w-full">
+<div class="text-center">
+<div class="text-sm font-medium">Operating Margin</div>
+<div class="text-base font-bold text-primary">42.5%</div>
+<div class="text-xs text-gray-500 mt-1">9,052 / 21,300</div>
+</div>
+<div class="text-center">
+<div class="text-sm font-medium">Tax Burden</div>
+<div class="text-base font-bold text-primary">82.8%</div>
+<div class="text-xs text-gray-500 mt-1">7,500 / 9,052</div>
+</div>
+<div class="text-center">
+<div class="text-sm font-medium">Financial Leverage</div>
+<div class="text-base font-bold text-primary">1.56x</div>
+<div class="text-xs text-gray-500 mt-1">33,280 / 21,330</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Currency Flow Analysis -->
+<div class="widget">
+<div class="widget-header p-4 flex justify-between items-center">
+<h2 class="font-semibold">Phân tích dòng tiền tệ</h2>
+<div class="flex items-center">
+<span class="text-xs text-gray-500 mr-2">Q2/2024</span>
+<button class="text-gray-500 hover:text-primary">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-more-2-fill"></i>
+</div>
+</button>
+</div>
+</div>
+<div class="p-4">
+<div class="chart-container" id="currencyFlowChart"></div>
+<div class="mt-4 space-y-3">
+<div class="flex items-center justify-between text-xs">
+<span class="text-gray-500">Tổng dòng tiền vào:</span>
+<span class="font-medium text-green-500">+2,850 tỷ VND</span>
+</div>
+<div class="flex items-center justify-between text-xs">
+<span class="text-gray-500">Tổng dòng tiền ra:</span>
+<span class="font-medium text-red-500">-1,250 tỷ VND</span>
+</div>
+<div class="flex items-center justify-between text-xs">
+<span class="text-gray-500">Dòng tiền ròng:</span>
+<span class="font-medium text-primary">+1,600 tỷ VND</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Trading Signals -->
+<div class="widget">
+<div class="widget-header p-4 flex justify-between items-center">
+<h2 class="font-semibold">Tín hiệu giao dịch</h2>
+<div class="flex items-center">
+<span class="text-xs text-gray-500 mr-2">20/06/2025</span>
+<button class="text-gray-500 hover:text-primary">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-more-2-fill"></i>
+</div>
+</button>
+</div>
+</div>
+<div class="p-4">
+<div class="bg-red-50 border border-red-200 rounded p-3 mb-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center">
+<div class="w-6 h-6 flex items-center justify-center text-red-500 mr-2">
+<i class="ri-alert-line"></i>
+</div>
+<span class="text-sm font-medium text-red-700">Tín hiệu bán</span>
+</div>
+<span class="text-xs text-red-700 font-medium">RSI quá mua</span>
+</div>
+</div>
+<div class="space-y-4">
+<div>
+<h3 class="text-xs font-medium mb-2">Chỉ báo kỹ thuật</h3>
+<div class="grid grid-cols-2 gap-2">
+<div class="flex items-center justify-between bg-gray-50 p-2 rounded">
+<span class="text-xs text-gray-500">RSI (14)</span>
+<span class="text-xs font-medium text-red-500">72.5</span>
+</div>
+<div class="flex items-center justify-between bg-gray-50 p-2 rounded">
+<span class="text-xs text-gray-500">MACD</span>
+<span class="text-xs font-medium text-green-500">Tăng</span>
+</div>
+<div class="flex items-center justify-between bg-gray-50 p-2 rounded">
+<span class="text-xs text-gray-500">MA (20)</span>
+<span class="text-xs font-medium text-green-500">Trên</span>
+</div>
+<div class="flex items-center justify-between bg-gray-50 p-2 rounded">
+<span class="text-xs text-gray-500">MA (50)</span>
+<span class="text-xs font-medium text-green-500">Trên</span>
+</div>
+<div class="flex items-center justify-between bg-gray-50 p-2 rounded">
+<span class="text-xs text-gray-500">Bollinger</span>
+<span class="text-xs font-medium text-red-500">Trên dải</span>
+</div>
+<div class="flex items-center justify-between bg-gray-50 p-2 rounded">
+<span class="text-xs text-gray-500">Stochastic</span>
+<span class="text-xs font-medium text-red-500">Quá mua</span>
+</div>
+</div>
+</div>
+<div>
+<h3 class="text-xs font-medium mb-2">Mức hỗ trợ & kháng cự</h3>
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<span class="text-xs text-red-500">Kháng cự 2</span>
+<span class="text-xs font-medium">21,500đ</span>
+<span class="text-xs text-gray-500">+11.7%</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-red-500">Kháng cự 1</span>
+<span class="text-xs font-medium">20,200đ</span>
+<span class="text-xs text-gray-500">+4.9%</span>
+</div>
+<div class="flex items-center justify-between font-medium">
+<span class="text-xs text-primary">Giá hiện tại</span>
+<span class="text-xs text-primary">19,250đ</span>
+<span class="text-xs text-primary">0.0%</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-green-500">Hỗ trợ 1</span>
+<span class="text-xs font-medium">18,400đ</span>
+<span class="text-xs text-gray-500">-4.4%</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-green-500">Hỗ trợ 2</span>
+<span class="text-xs font-medium">17,500đ</span>
+<span class="text-xs text-gray-500">-9.1%</span>
+</div>
+</div>
+</div>
+<div>
+<h3 class="text-xs font-medium mb-2">Khuyến nghị</h3>
+<div class="space-y-2">
+<div class="flex items-center">
+<div class="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
+<span class="text-xs">Chốt lời một phần ở vùng giá hiện tại</span>
+</div>
+<div class="flex items-center">
+<div class="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
+<span class="text-xs">Đặt stop loss ở mức 18,400đ</span>
+</div>
+<div class="flex items-center">
+<div class="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
+<span class="text-xs">Theo dõi khối lượng giao dịch trong phiên tới</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Valuation Metrics -->
+<div class="widget">
+<div class="widget-header p-4 flex justify-between items-center">
+<h2 class="font-semibold">Chỉ số định giá</h2>
+<button class="text-gray-500 hover:text-primary">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-more-2-fill"></i>
+</div>
+</button>
+</div>
+<div class="p-4">
+<div class="space-y-4">
+<div class="grid grid-cols-3 gap-2">
+<div class="bg-gray-50 p-2 rounded">
+<div class="text-xs text-gray-500">P/E</div>
+<div class="text-xs text-gray-500">8.2x</div>
+<div class="text-xs text-green-500">-12% vs. ngành</div>
+</div>
+<div class="bg-gray-50 p-2 rounded">
+<div class="text-xs text-gray-500">P/B</div>
+<div class="text-xs text-gray-500">1.6x</div>
+<div class="text-xs text-green-500">-8% vs. ngành</div>
+</div>
+<div class="bg-gray-50 p-2 rounded">
+<div class="text-xs text-gray-500">Lợi suất cổ tức</div>
+<div class="text-xs text-gray-500">7.8%</div>
+<div class="text-xs text-green-500">+34% vs. ngành</div>
+</div>
+</div>
+<div>
+<h3 class="text-xs font-medium mb-2">So sánh P/E</h3>
+<div class="chart-container" id="peComparisonChart"></div>
+</div>
+<div>
+<h3 class="text-xs font-medium mb-2">Định giá tương đối</h3>
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<span class="text-xs">P/E trung bình 5 năm</span>
+<span class="text-xs font-medium">10.5x</span>
+<span class="text-xs text-green-500">-21.9%</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs">P/B trung bình 5 năm</span>
+<span class="text-xs font-medium">1.8x</span>
+<span class="text-xs text-green-500">-11.1%</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs">P/E trung vị ngành</span>
+<span class="text-xs font-medium">9.3x</span>
+<span class="text-xs text-green-500">-11.8%</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs">P/B trung vị ngành</span>
+<span class="text-xs font-medium">1.7x</span>
+<span class="text-xs text-green-500">-5.9%</span>
+</div>
+</div>
+</div>
+<div>
+<h3 class="text-xs font-medium mb-2">Mục tiêu giá</h3>
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<span class="text-xs">Dựa trên P/E</span>
+<span class="text-xs font-medium">21,800đ</span>
+<span class="text-xs text-green-500">+13.2%</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs">Dựa trên P/B</span>
+<span class="text-xs font-medium">20,500đ</span>
+<span class="text-xs text-green-500">+6.5%</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs">Dựa trên DDM</span>
+<span class="text-xs font-medium">22,200đ</span>
+<span class="text-xs text-green-500">+15.3%</span>
+</div>
+<div class="flex items-center justify-between font-medium">
+<span class="text-xs">Trung bình</span>
+<span class="text-xs">21,500đ</span>
+<span class="text-xs text-green-500">+11.7%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Key Ratios -->
+<div class="widget">
+<div class="widget-header p-4 flex justify-between items-center">
+<h2 class="font-semibold">Các tỷ số chính</h2>
+<button class="text-gray-500 hover:text-primary">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-more-2-fill"></i>
+</div>
+</button>
+</div>
+<div class="p-4">
+<div class="space-y-4">
+<div>
+<h3 class="text-xs font-medium mb-2">Hiệu quả hoạt động</h3>
+<div class="grid grid-cols-2 gap-2">
+<div class="flex items-center justify-between bg-gray-50 p-2 rounded">
+<span class="text-xs text-gray-500">ROE</span>
+<span class="text-xs text-gray-500 font-medium">22.5%</span>
+</div>
+<div class="flex items-center justify-between bg-gray-50 p-2 rounded">
+<span class="text-xs text-gray-500">ROA</span>
+<span class="text-xs text-gray-500 font-medium">1.8%</span>
+</div>
+<div class="flex items-center justify-between bg-gray-50 p-2 rounded">
+<span class="text-xs text-gray-500">NIM</span>
+<span class="text-xs text-gray-500 font-medium">4.2%</span>
+</div>
+<div class="flex items-center justify-between bg-gray-50 p-2 rounded">
+<span class="text-xs text-gray-500">CIR</span>
+<span class="text-xs text-gray-500 font-medium">35.8%</span>
+</div>
+</div>
+</div>
+<div>
+<h3 class="text-xs font-medium mb-2">Chất lượng tài sản</h3>
+<div class="grid grid-cols-2 gap-2">
+<div class="flex items-center justify-between bg-gray-50 p-2 rounded">
+<span class="text-xs text-gray-500">NPL</span>
+<span class="text-xs text-gray-500 font-medium">1.2%</span>
+</div>
+<div class="flex items-center justify-between bg-gray-50 p-2 rounded">
+<span class="text-xs text-gray-500">LLR/NPL</span>
+<span class="text-xs text-gray-500 font-medium">165%</span>
+</div>
+<div class="flex items-center justify-between bg-gray-50 p-2 rounded">
+<span class="text-xs text-gray-500">Credit cost</span>
+<span class="text-xs text-gray-500 font-medium">1.1%</span>
+</div>
+<div class="flex items-center justify-between bg-gray-50 p-2 rounded">
+<span class="text-xs text-gray-500">Nợ xấu nhóm 2</span>
+<span class="text-xs text-gray-500 font-medium">1.8%</span>
+</div>
+</div>
+</div>
+<div>
+<h3 class="text-xs font-medium mb-2">Thanh khoản & Vốn</h3>
+<div class="grid grid-cols-2 gap-2">
+<div class="flex items-center justify-between bg-gray-50 p-2 rounded">
+<span class="text-xs text-gray-500">LDR</span>
+<span class="text-xs text-gray-500 font-medium">78.5%</span>
+</div>
+<div class="flex items-center justify-between bg-gray-50 p-2 rounded">
+<span class="text-xs text-gray-500">CAR</span>
+<span class="text-xs text-gray-500 font-medium">12.8%</span>
+</div>
+<div class="flex items-center justify-between bg-gray-50 p-2 rounded">
+<span class="text-xs text-gray-500">CASA</span>
+<span class="text-xs text-gray-500 font-medium">22.4%</span>
+</div>
+<div class="flex items-center justify-between bg-gray-50 p-2 rounded">
+<span class="text-xs text-gray-500">Tier 1 ratio</span>
+<span class="text-xs text-gray-500 font-medium">10.5%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Ownership & Insider Details -->
+<div class="widget">
+<div class="widget-header p-4 flex justify-between items-center">
+<h2 class="font-semibold">Sở hữu & Giao dịch nội bộ</h2>
+<button class="text-gray-500 hover:text-primary">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-more-2-fill"></i>
+</div>
+</button>
+</div>
+<div class="p-4">
+<div class="space-y-4">
+<div>
+<h3 class="text-xs font-medium mb-2">Cơ cấu sở hữu</h3>
+<div class="chart-container" id="ownershipChart" style="height: 180px;"></div>
+</div>
+<div>
+<h3 class="text-xs font-medium mb-2">Giao dịch nội bộ gần đây</h3>
+<div class="space-y-2">
+<div class="flex items-center justify-between text-xs">
+<span class="w-32">Nguyễn Thị Minh</span>
+<span class="w-24">Phó TGĐ</span>
+<span class="w-16 text-green-500">Mua</span>
+<span class="w-16">200,000</span>
+<span>15/06/2025</span>
+</div>
+<div class="flex items-center justify-between text-xs">
+<span class="w-32">Trần Văn Hùng</span>
+<span class="w-24">TV HĐQT</span>
+<span class="w-16 text-green-500">Mua</span>
+<span class="w-16">350,000</span>
+<span>10/06/2025</span>
+</div>
+<div class="flex items-center justify-between text-xs">
+<span class="w-32">Lê Thị Hương</span>
+<span class="w-24">Kế toán trưởng</span>
+<span class="w-16 text-red-500">Bán</span>
+<span class="w-16">120,000</span>
+<span>02/06/2025</span>
+</div>
+<div class="flex items-center justify-between text-xs">
+<span class="w-32">Phạm Minh Tú</span>
+<span class="w-24">TV HĐQT</span>
+<span class="w-16 text-green-500">Mua</span>
+<span class="w-16">500,000</span>
+<span>25/05/2025</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</main>
+
+<script id="chartInitialization">
+document.addEventListener('DOMContentLoaded', function() {
+// Initialize new charts
+const radarChart = echarts.init(document.getElementById('radarChart'));
+const sankeyChart = echarts.init(document.getElementById('sankeyChart'));
+const doughnutChart = echarts.init(document.getElementById('doughnutChart'));
+// Radar Chart Configuration
+const radarOption = {
+  animation: false,
+  radar: {
+    indicator: [
+      { name: 'Volatility', max: 100 },
+      { name: 'Volume', max: 100 },
+      { name: 'Momentum', max: 100 },
+      { name: 'Trend', max: 100 },
+      { name: 'Liquidity', max: 100 }
+    ],
+    splitArea: {
+      areaStyle: {
+        color: ['rgba(87, 181, 231, 0.05)', 'rgba(87, 181, 231, 0.1)']
+      }
+    },
+    axisLine: {
+      lineStyle: {
+        color: '#475569'
+      }
+    },
+    splitLine: {
+      lineStyle: {
+        color: '#475569'
+      }
+    }
+  },
+  series: [{
+    type: 'radar',
+    data: [
+      {
+        value: [85, 65, 55, 80, 70],
+        name: 'EUR/USD',
+        lineStyle: {
+          color: 'rgba(87, 181, 231, 1)'
+        },
+        areaStyle: {
+          color: 'rgba(87, 181, 231, 0.2)'
+        }
+      },
+      {
+        value: [70, 75, 80, 65, 60],
+        name: 'GBP/USD',
+        lineStyle: {
+          color: 'rgba(141, 211, 199, 1)'
+        },
+        areaStyle: {
+          color: 'rgba(141, 211, 199, 0.2)'
+        }
+      }
+    ]
+  }],
+  tooltip: {
+    trigger: 'item',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    textStyle: {
+      color: '#1e293b'
+    }
+  }
+};
+// Sankey Chart Configuration
+const sankeyOption = {
+  animation: false,
+  tooltip: {
+    trigger: 'item',
+    triggerOn: 'mousemove',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    textStyle: {
+      color: '#1e293b'
+    }
+  },
+  series: [{
+    type: 'sankey',
+    data: [
+      { name: 'USD' },
+      { name: 'EUR' },
+      { name: 'GBP' },
+      { name: 'Spot' },
+      { name: 'Forward' },
+      { name: 'Swap' }
+    ],
+    links: [
+      { source: 'USD', target: 'Spot', value: 5 },
+      { source: 'USD', target: 'Forward', value: 3 },
+      { source: 'USD', target: 'Swap', value: 8 },
+      { source: 'EUR', target: 'Spot', value: 4 },
+      { source: 'EUR', target: 'Forward', value: 2 },
+      { source: 'EUR', target: 'Swap', value: 6 },
+      { source: 'GBP', target: 'Spot', value: 3 },
+      { source: 'GBP', target: 'Forward', value: 1 },
+      { source: 'GBP', target: 'Swap', value: 4 }
+    ],
+    lineStyle: {
+      color: 'gradient',
+      curveness: 0.5
+    },
+    itemStyle: {
+      color: '#3b82f6',
+      borderColor: '#1e293b'
+    },
+    label: {
+      color: '#e2e8f0'
+    }
+  }]
+};
+// Doughnut Chart Configuration
+const doughnutOption = {
+  animation: false,
+  tooltip: {
+    trigger: 'item',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    textStyle: {
+      color: '#1e293b'
+    }
+  },
+  legend: {
+    orient: 'vertical',
+    right: 10,
+    top: 'center',
+    textStyle: {
+      color: '#e2e8f0'
+    }
+  },
+  series: [{
+    type: 'pie',
+    radius: ['40%', '70%'],
+    avoidLabelOverlap: false,
+    itemStyle: {
+      borderColor: '#1e293b',
+      borderWidth: 2
+    },
+    label: {
+      show: false
+    },
+    emphasis: {
+      label: {
+        show: true,
+        fontSize: '14',
+        fontWeight: 'bold'
+      }
+    },
+    labelLine: {
+      show: false
+    },
+    data: [
+      { value: 35, name: 'EUR/USD', itemStyle: { color: 'rgba(87, 181, 231, 1)' } },
+      { value: 25, name: 'GBP/USD', itemStyle: { color: 'rgba(141, 211, 199, 1)' } },
+      { value: 20, name: 'USD/JPY', itemStyle: { color: 'rgba(251, 191, 114, 1)' } },
+      { value: 15, name: 'AUD/USD', itemStyle: { color: 'rgba(252, 141, 98, 1)' } },
+      { value: 5, name: 'Others', itemStyle: { color: 'rgba(87, 181, 231, 0.5)' } }
+    ]
+  }]
+};
+// Set chart options
+radarChart.setOption(radarOption);
+sankeyChart.setOption(sankeyOption);
+doughnutChart.setOption(doughnutOption);
+// Main Chart
+const mainChart = echarts.init(document.getElementById('mainChart'));
+const mainChartOption = {
+animation: false,
+grid: {
+top: 20,
+right: 20,
+bottom: 30,
+left: 50
+},
+tooltip: {
+trigger: 'axis',
+backgroundColor: 'rgba(255, 255, 255, 0.8)',
+borderColor: '#ccc',
+textStyle: {
+color: '#1e293b'
+}
+},
+xAxis: {
+type: 'category',
+data: Array.from({length: 24}, (_, i) => `${i}:00`),
+axisLine: {
+lineStyle: {
+color: '#475569'
+}
+},
+ axisLabel: {
+color: '#94a3b8'
+},
+splitLine: {
+show: false
+}
+},
+yAxis: {
+type: 'value',
+axisLine: {
+lineStyle: {
+color: '#475569'
+}
+},
+axisLabel: {
+color: '#94a3b8'
+},
+splitLine: {
+lineStyle: {
+color: '#334155'
+}
+}
+},
+series: [
+{
+data: [1.0832, 1.0828, 1.0825, 1.0820, 1.0818, 1.0823, 1.0825, 1.0830, 1.0835, 1.0832, 1.0828, 1.0825, 1.0828, 1.0832, 1.0835, 1.0838, 1.0842, 1.0845, 1.0843, 1.0840, 1.0838, 1.0842, 1.0845, 1.0845],
+type: 'line',
+smooth: true,
+lineStyle: {
+color: 'rgba(87, 181, 231, 1)',
+width: 3
+},
+symbol: 'none',
+areaStyle: {
+color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+{
+offset: 0,
+color: 'rgba(87, 181, 231, 0.3)'
+},
+{
+offset: 1,
+color: 'rgba(87, 181, 231, 0.05)'
+}
+])
+}
+}
+]
+};
+mainChart.setOption(mainChartOption);
+
+
+// Heatmap Chart
+const heatmapChart = echarts.init(document.getElementById('heatmapChart'));
+const heatmapOption = {
+animation: false,
+tooltip: {
+trigger: 'item',
+backgroundColor: 'rgba(255, 255, 255, 0.8)',
+textStyle: {
+color: '#1e293b'
+}
+},
+series: [
+{
+type: 'treemap',
+data: [
+{
+name: 'USD',
+value: 80,
+itemStyle: {
+color: 'rgba(87, 181, 231, 1)'
+}
+},
+{
+name: 'EUR',
+value: 65,
+itemStyle: {
+color: 'rgba(141, 211, 199, 1)'
+}
+},
+{
+name: 'JPY',
+value: 55,
+itemStyle: {
+color: 'rgba(251, 191, 114, 1)'
+}
+},
+{
+name: 'GBP',
+value: 50,
+itemStyle: {
+color: 'rgba(252, 141, 98, 1)'
+}
+},
+{
+name: 'CHF',
+value: 45,
+itemStyle: {
+color: 'rgba(87, 181, 231, 0.8)'
+}
+},
+{
+name: 'CAD',
+value: 40,
+itemStyle: {
+color: 'rgba(141, 211, 199, 0.8)'
+}
+},
+{
+name: 'AUD',
+value: 35,
+itemStyle: {
+color: 'rgba(251, 191, 114, 0.8)'
+}
+},
+{
+name: 'NZD',
+value: 30,
+itemStyle: {
+color: 'rgba(252, 141, 98, 0.8)'
+}
+}
+],
+label: {
+show: true,
+formatter: '{b}',
+color: '#fff'
+},
+breadcrumb: {
+show: false
+},
+roam: false,
+itemStyle: {
+borderColor: '#1e293b',
+borderWidth: 1,
+gapWidth: 2
+},
+emphasis: {
+itemStyle: {
+shadowBlur: 10,
+shadowColor: 'rgba(0, 0, 0, 0.5)'
+}
+}
+}
+]
+};
+heatmapChart.setOption(heatmapOption);
+// Technical Chart
+const technicalChart = echarts.init(document.getElementById('technicalChart'));
+const technicalOption = {
+animation: false,
+grid: {
+top: 10,
+right: 10,
+bottom: 20,
+left: 50
+},
+tooltip: {
+trigger: 'axis',
+backgroundColor: 'rgba(255, 255, 255, 0.8)',
+textStyle: {
+color: '#1e293b'
+}
+},
+xAxis: {
+type: 'category',
+data: ['MA5', 'MA10', 'MA20', 'MA50', 'MA100', 'MA200', 'RSI', 'MACD', 'Stoch', 'BB', 'ATR'],
+axisLine: {
+lineStyle: {
+color: '#475569'
+}
+},
+axisLabel: {
+color: '#94a3b8',
+rotate: 45
+},
+splitLine: {
+show: false
+}
+},
+yAxis: {
+type: 'value',
+min: -100,
+max: 100,
+axisLine: {
+lineStyle: {
+color: '#475569'
+}
+},
+axisLabel: {
+color: '#94a3b8'
+},
+splitLine: {
+lineStyle: {
+color: '#334155'
+}
+}
+},
+series: [
+{
+data: [80, 60, 40, 20, -20, -40, 30, -10, -30, 50, 10],
+type: 'bar',
+itemStyle: {
+color: function(params) {
+return params.data >= 0 ? 'rgba(141, 211, 199, 1)' : 'rgba(252, 141, 98, 1)';
+},
+borderRadius: 4
+}
+}
+]
+};
+technicalChart.setOption(technicalOption);
+// Resize charts when window size changes
+window.addEventListener('resize', function() {
+mainChart.resize();
+heatmapChart.resize();
+technicalChart.resize();
+radarChart.resize();
+sankeyChart.resize();
+doughnutChart.resize();
+});
+});
+</script>
+<script id="customControls">
+document.addEventListener('DOMContentLoaded', function() {
+// Custom Checkbox
+const checkboxes = document.querySelectorAll('.custom-checkbox');
+checkboxes.forEach(checkbox => {
+checkbox.addEventListener('click', function() {
+const input = this.previousElementSibling;
+input.checked = !input.checked;
+this.classList.toggle('checked', input.checked);
+});
+});
+// Custom Radio
+const radios = document.querySelectorAll('.custom-radio');
+radios.forEach(radio => {
+radio.addEventListener('click', function() {
+const input = this.previousElementSibling;
+const name = input.getAttribute('name');
+document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+r.checked = false;
+r.nextElementSibling.classList.remove('checked');
+});
+input.checked = true;
+this.classList.add('checked');
+});
+});
+// Custom Switch
+const switches = document.querySelectorAll('.custom-switch');
+switches.forEach(switchEl => {
+switchEl.addEventListener('click', function() {
+const input = this.previousElementSibling;
+input.checked = !input.checked;
+this.classList.toggle('active', input.checked);
+});
+});
+});
+</script>
+
+</body>
+</html>
