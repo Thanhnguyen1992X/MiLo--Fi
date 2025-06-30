@@ -1,5 +1,4 @@
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -17,6 +16,7 @@ import {
   BarChart3,
   Users
 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 interface PlaylistItem {
   id: string;
@@ -30,6 +30,8 @@ export const ReportDashboard = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeReport, setActiveReport] = useState('financial-analysis');
   const [searchQuery, setSearchQuery] = useState('');
+  const [reportAnalysis, setReportAnalysis] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
 
   const playlistItems: PlaylistItem[] = [
     {
@@ -69,6 +71,23 @@ export const ReportDashboard = () => {
     { name: 'resources', icon: BookOpen, active: false },
     { name: 'playlist', icon: List, active: true }
   ];
+
+  useEffect(() => {
+    const fetchLatestAnalysis = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('stock_analysis')
+        .select('analysis_result')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+      if (data && data.analysis_result) {
+        setReportAnalysis(data.analysis_result);
+      }
+      setLoading(false);
+    };
+    fetchLatestAnalysis();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 p-6">
@@ -127,9 +146,7 @@ export const ReportDashboard = () => {
                 
                 <div className="mt-6 p-6 bg-slate-50/80 rounded-2xl backdrop-blur-sm">
                   <p className="text-slate-700 leading-relaxed">
-                    "FINANCIAL REPORT" is a comprehensive analysis composed by our expert team
-                    and interpreted by advanced AI systems like GPT-4, providing detailed
-                    market insights and portfolio recommendations with real-time data integration.
+                    {loading ? 'Loading analysis...' : (reportAnalysis || 'No analysis available.')}
                   </p>
                   <button className="mt-4 text-blue-600 hover:text-blue-700 font-medium">
                     Read more...
