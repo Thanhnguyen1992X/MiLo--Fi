@@ -79,10 +79,13 @@ export const ReportDashboard = () => {
         .from('stock_analysis')
         .select('analysis_result')
         .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
-      if (data && data.analysis_result) {
-        setReportAnalysis(data.analysis_result);
+        .limit(1);
+      if (error) {
+        setReportAnalysis('Lỗi lấy dữ liệu từ Supabase');
+      } else if (data && data.length > 0 && data[0].analysis_result) {
+        setReportAnalysis(data[0].analysis_result);
+      } else {
+        setReportAnalysis('Không có dữ liệu phân tích.');
       }
       setLoading(false);
     };
