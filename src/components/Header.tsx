@@ -13,6 +13,8 @@ import {
   LogOut,
   Menu,
   X,
+  FileText,
+  Search,
   Coins,
   BarChart3
 } from 'lucide-react';
@@ -31,7 +33,9 @@ export const Header = () => {
 
   const navItems = [
     { to: '/chat', icon: MessageCircle, label: 'Chat', requireAuth: true },
+    { to: '/screener', icon: Search, label: 'Screener', requireAuth: true },
     { to: '/financial', icon: BarChart3, label: 'Financial', requireAuth: false },
+    { to: '/report', icon: FileText, label: 'Report', requireAuth: true },
     { to: '/purchase', icon: CreditCard, label: 'Purchase', requireAuth: true },
     { to: '/about', icon: Info, label: 'About', requireAuth: false },
   ];
