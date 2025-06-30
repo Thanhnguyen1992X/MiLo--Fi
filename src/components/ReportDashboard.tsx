@@ -77,10 +77,8 @@ export const ReportDashboard = () => {
       setLoading(true);
       let { data, error } = await supabase
         .from('stock_analysis')
-        .select('analysis_result, created_at, analysis_date')
-        .order('created_at', { ascending: false })
-        .limit(1);
-      console.log('Fetch by created_at:', data, error);
+        .select('*');
+      console.log('All stock_analysis:', data, error);
 
       if ((!data || data.length === 0 || !data[0].analysis_result)) {
         const res = await supabase
