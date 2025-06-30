@@ -64,13 +64,7 @@ export const ReportDashboard = () => {
     }
   ];
 
-  const navigationItems = [
-    { name: 'home', icon: Home, active: false },
-    { name: 'reports', icon: FileText, active: false },
-    { name: 'analytics', icon: BarChart3, active: false },
-    { name: 'resources', icon: BookOpen, active: false },
-    { name: 'playlist', icon: List, active: true }
-  ];
+
 
   useEffect(() => {
     const fetchLatestAnalysis = async () => {
@@ -104,33 +98,7 @@ export const ReportDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 p-6">
-      {/* Navigation Header */}
-      <div className="flex items-center justify-between mb-8">
-        <nav className="flex space-x-8">
-          {navigationItems.map((item) => (
-            <button
-              key={item.name}
-              className={`text-sm font-medium transition-all duration-300 ${
-                item.active
-                  ? 'text-blue-600 border-b-2 border-blue-600'
-                  : 'text-slate-500 hover:text-slate-700'
-              }`}
-            >
-              {item.name}
-            </button>
-          ))}
-        </nav>
-
-        {/* User Profile Section */}
-        <div className="flex items-center space-x-4">
-          <div className="text-right">
-            <div className="text-sm text-slate-500">23k followers • 5 following</div>
-          </div>
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center">
-            <User className="w-6 h-6 text-white" />
-          </div>
-        </div>
-      </div>
+    
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
         {/* Main Content Area - Vinyl Player Interface */}
