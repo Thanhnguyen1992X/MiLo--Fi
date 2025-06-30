@@ -36,8 +36,22 @@ const App = () => (
             <Route path="/chat" element={<Chat />} />
             <Route path="/purchase" element={<Purchase />} />
             <Route path="/about" element={<About />} />
-            <Route path="/screener" element={<Screener />} />
-            <Route path="/report" element={<Report />} />
+            <Route
+              path="/screener"
+              element={
+                <ProtectedRoute>
+                  <Screener />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/report"
+              element={
+                <ProtectedRoute>
+                  <Report />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/n8ndashboard"
               element={
