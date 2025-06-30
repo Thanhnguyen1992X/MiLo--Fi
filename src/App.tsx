@@ -15,6 +15,8 @@ import { About } from "@/pages/About";
 import NotFound from "./pages/NotFound";
 import N8NDashboard from './pages/N8NDashboard';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import { Screener } from "@/pages/Screener";
+import { Report } from "@/pages/Report";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +36,8 @@ const App = () => (
             <Route path="/chat" element={<Chat />} />
             <Route path="/purchase" element={<Purchase />} />
             <Route path="/about" element={<About />} />
+            <Route path="/screener" element={<Screener />} />
+            <Route path="/report" element={<Report />} />
             <Route
               path="/n8ndashboard"
               element={
@@ -42,6 +46,7 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
+           
             <Route path="*" element={<NotFound />} />
           </Routes>
         </HashRouter>

@@ -19,6 +19,7 @@ import {
   BarChart3
 } from 'lucide-react';
 
+
 export const Header = () => {
   const { user, signOut } = useAuth();
   const { profile } = useProfile();
