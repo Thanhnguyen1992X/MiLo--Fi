@@ -18,6 +18,8 @@ import {
   Coins,
   BarChart3
 } from 'lucide-react';
+import { Screener } from "@/pages/Screener";
+import { Report } from "@/pages/Report";  
 
 
 export const Header = () => {
