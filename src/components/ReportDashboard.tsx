@@ -86,7 +86,6 @@ export const ReportDashboard = () => {
           .select('analysis_result, created_at, analysis_date')
           .order('analysis_date', { ascending: false })
           .limit(1);
-        data = res.data;
         error = res.error;
         console.log('Fetch by analysis_date:', data, error);
       }
