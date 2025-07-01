@@ -115,6 +115,7 @@ export const ReportDashboard = () => {
         .from('report')
         .select('tieude')
         .order('analysis_date', { ascending: false });
+      console.log('DATA TIEUDE:', data, error);
       if (error || !data) {
         setTieudeList(['Không có tiêu đề', 'Không có tiêu đề', 'Không có tiêu đề', 'Không có tiêu đề']);
       } else {
