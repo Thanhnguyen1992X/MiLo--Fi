@@ -121,6 +121,7 @@ export const ReportDashboard = () => {
 
   useEffect(() => {
     const fetchAllTieude = async () => {
+      setLoading(true);
       const { data, error } = await supabase
         .from('report')
         .select('tieude')
@@ -132,23 +133,24 @@ export const ReportDashboard = () => {
         while (titles.length < 4) titles.push('Không có tiêu đề');
         setTieudeList(titles);
       }
+      setLoading(false);
     };
     fetchAllTieude();
   }, []);
 
   useEffect(() => {
+    if (!selectedReport) return;
+    const idx = playlistItems.findIndex(item => item.id === selectedReport.id);
+    if (idx < 0 || !tieudeList[idx] || tieudeList[idx] === 'Không có tiêu đề') {
+      setLatestAnalysisResult('Không có nội dung phân tích');
+      return;
+    }
     const fetchAnalysisResultByTieude = async () => {
-      if (!selectedReport) return;
-      const idx = playlistItems.findIndex(item => item.id === selectedReport.id);
       const tieude = tieudeList[idx];
-      if (!tieude || tieude === 'Không có tiêu đề') {
-        setLatestAnalysisResult('Không có nội dung phân tích');
-        return;
-      }
       const { data, error } = await supabase
         .from('report')
         .select('analysis_result')
-        .eq('tieude', tieude)
+        .ilike('tieude', tieude)
         .limit(1)
         .single();
       if (error || !data?.analysis_result) {
@@ -159,6 +161,10 @@ export const ReportDashboard = () => {
     };
     fetchAnalysisResultByTieude();
   }, [selectedReport, tieudeList]);
+
+  if (loading || tieudeList.length < 4) {
+    return <div className="flex justify-center items-center h-96 text-xl font-bold">Đang tải dữ liệu báo cáo...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 p-6">
