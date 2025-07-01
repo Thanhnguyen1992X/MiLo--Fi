@@ -9,3 +9,31 @@ const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiO
 // import { supabase } from "@/integrations/supabase/client";
 
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+useEffect(() => {
+  const fetchAllTieude = async () => {
+    const { data, error } = await supabase
+      .from('report')
+      .select('tieude')
+      .order('analysis_date', { ascending: false });
+    console.log('DATA TIEUDE:', data, error);
+  };
+  fetchAllTieude();
+}, []);
+
+useEffect(() => {
+  const fetchAnalysisResultByTieude = async () => {
+    if (!selectedReport) return;
+    const idx = playlistItems.findIndex(item => item.id === selectedReport.id);
+    const tieude = tieudeList[idx];
+    console.log('TIEUDE CHỌN:', tieude);
+    const { data, error } = await supabase
+      .from('report')
+      .select('analysis_result')
+      .ilike('tieude', tieude)
+      .limit(1)
+      .single();
+    console.log('DATA ANALYSIS_RESULT:', data, error);
+  };
+  fetchAnalysisResultByTieude();
+}, [selectedReport, tieudeList]);
