@@ -35,6 +35,7 @@ export const ReportDashboard = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedReport, setSelectedReport] = useState<PlaylistItem | null>(null);
   const dialogTriggerRef = useRef<HTMLButtonElement>(null);
+  const [latestTieude, setLatestTieude] = useState<string>('');
 
   const playlistItems: PlaylistItem[] = [
     {
@@ -96,6 +97,25 @@ export const ReportDashboard = () => {
     };
     fetchLatestAnalysis();
   }, []);
+
+  useEffect(() => {
+    const fetchLatestTieude = async () => {
+      if (selectedReport?.id === '1') {
+        const { data, error } = await supabase
+          .from('report')
+          .select('tieude')
+          .order('date', { ascending: false })
+          .limit(1)
+          .single();
+        if (error || !data?.tieude) {
+          setLatestTieude('Không có tiêu đề mới nhất');
+        } else {
+          setLatestTieude(data.tieude);
+        }
+      }
+    };
+    fetchLatestTieude();
+  }, [selectedReport]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 p-6">
@@ -232,7 +252,7 @@ export const ReportDashboard = () => {
                 <DialogContent className="max-w-3xl w-full">
                   {selectedReport?.id === '1' ? (
                     <>
-                      <div className="text-2xl font-bold text-center mb-4">Test thành công</div>
+                      <div className="text-2xl font-bold text-center mb-4">{latestTieude}</div>
                       <div className="flex justify-end mt-4">
                         <Button
                           onClick={() => window.location.href = 'https://www.npmjs.com/package/n8n-nodes-pdfco'}

@@ -131,6 +131,42 @@ export type Database = {
           analysis_result?: string
         }
         Relationships: []
+      },
+      report: {
+        Row: {
+          id: string;
+          date: string;
+          stock_code: string;
+          analysis_result: string;
+          trading_signal: string;
+          tieude: string;
+          pdf: string;
+          voice: string;
+          phanloai: string;
+          token_remaing: number;
+          subcription_status: string;
+        };
+        Insert: {
+          id?: string;
+          date: string;
+          stock_code: string;
+          analysis_result: string;
+          trading_signal: string;
+          tieude: string;
+          pdf: string;
+          voice: string;
+        };
+        Update: {
+          id?: string;
+          date?: string;
+          stock_code?: string;
+          analysis_result?: string;
+          trading_signal?: string;
+          tieude?: string;
+          pdf?: string;
+          voice?: string;
+        };
+        Relationships: [];
       }
     }
     Views: {
