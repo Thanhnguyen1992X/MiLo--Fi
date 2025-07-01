@@ -8,10 +8,8 @@ import {
   Users,
   Code,
   Heart,
-  Star,
-  BarChart3
+  Star
 } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 export const About = () => {
   return (
@@ -228,58 +226,6 @@ export const About = () => {
                 >
                   Follow us on Twitter
                 </a>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Financial Analysis */}
-        <Card className="bg-slate-900/50 border-slate-800">
-          <CardContent className="pt-8 pb-8">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
-                  <BarChart3 className="w-6 h-6 text-blue-400" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold text-white">Phân tích dòng tiền tệ</h2>
-                  <span className="text-xs text-gray-400">Q2/2024</span>
-                </div>
-              </div>
-              <button className="text-gray-500 hover:text-primary transition-colors">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.5"/><circle cx="19.5" cy="12" r="1.5"/><circle cx="4.5" cy="12" r="1.5"/></svg>
-              </button>
-            </div>
-            <div className="w-full h-56 mb-6">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={[
-                  { name: 'Tiền vào', value: 2850 },
-                  { name: 'Tiền ra', value: -1250 },
-                  { name: 'Dòng ròng', value: 1600 },
-                ]}>
-                  <XAxis dataKey="name" tick={{ fill: '#94a3b8', fontSize: 12 }} axisLine={{ stroke: '#334155' }} />
-                  <YAxis tick={{ fill: '#94a3b8', fontSize: 12 }} axisLine={{ stroke: '#334155' }} />
-                  <Tooltip contentStyle={{ background: '#1e293b', border: 'none', color: '#fff' }} />
-                  <Bar dataKey="value">
-                    <Cell key="in" fill="#22c55e" />
-                    <Cell key="out" fill="#ef4444" />
-                    <Cell key="net" fill="hsl(var(--primary))" />
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="mt-4 space-y-3">
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-gray-400">Tổng dòng tiền vào:</span>
-                <span className="font-medium text-green-500">+2,850 tỷ VND</span>
-              </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-gray-400">Tổng dòng tiền ra:</span>
-                <span className="font-medium text-red-500">-1,250 tỷ VND</span>
-              </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-gray-400">Dòng tiền ròng:</span>
-                <span className="font-medium text-primary">+1,600 tỷ VND</span>
               </div>
             </div>
           </CardContent>
