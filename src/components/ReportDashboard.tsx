@@ -35,6 +35,7 @@ export const ReportDashboard = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [htmlContent, setHtmlContent] = useState<string>('');
+  const [selectedReport, setSelectedReport] = useState<PlaylistItem | null>(null);
 
   const playlistItems: PlaylistItem[] = [
     {
@@ -97,14 +98,14 @@ export const ReportDashboard = () => {
     fetchLatestAnalysis();
   }, []);
 
-  // Load n8ndashboard.html content when dialog opens
+  // Load n8ndashboard.html content when dialog opens and Q4 Market Analysis is selected
   useEffect(() => {
-    if (dialogOpen) {
+    if (dialogOpen && selectedReport?.id === '1') {
       fetch('/n8ndashboard.html')
         .then((res) => res.text())
         .then((html) => setHtmlContent(html));
     }
-  }, [dialogOpen]);
+  }, [dialogOpen, selectedReport]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 p-6">
@@ -205,38 +206,39 @@ export const ReportDashboard = () => {
 
             <div className="space-y-4">
               {playlistItems.map((item) => (
-                <Dialog key={item.id} open={dialogOpen && item.id === '1'} onOpenChange={(open) => setDialogOpen(open)}>
-                  <DialogTrigger asChild>
-                    <div
-                      className={`p-4 rounded-2xl transition-all duration-300 cursor-pointer ${
-                        item.isActive
-                          ? 'bg-blue-500/20 backdrop-blur-sm border border-blue-200/50 shadow-lg transform scale-[1.02]'
-                          : 'bg-white/50 hover:bg-white/70 hover:shadow-md'
-                      }`}
-                      onClick={() => {
-                        if (item.id === '1') setDialogOpen(true);
-                        setActiveReport(item.id);
-                      }}
-                    >
-                      <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-slate-200 to-slate-300 rounded-lg flex items-center justify-center">
-                          <FileText className="w-6 h-6 text-slate-600" />
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-slate-800">{item.title}</h3>
-                          <p className="text-sm text-slate-600">created by {item.creator}</p>
-                        </div>
-                        {item.isActive && (
-                          <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                        )}
-                      </div>
+                <div
+                  key={item.id}
+                  className={`p-4 rounded-2xl transition-all duration-300 cursor-pointer ${
+                    item.isActive
+                      ? 'bg-blue-500/20 backdrop-blur-sm border border-blue-200/50 shadow-lg transform scale-[1.02]'
+                      : 'bg-white/50 hover:bg-white/70 hover:shadow-md'
+                  }`}
+                  onClick={() => {
+                    setSelectedReport(item);
+                    if (item.id === '1') setDialogOpen(true);
+                    setActiveReport(item.id);
+                  }}
+                >
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-slate-200 to-slate-300 rounded-lg flex items-center justify-center">
+                      <FileText className="w-6 h-6 text-slate-600" />
                     </div>
-                  </DialogTrigger>
-                  {/* Only Q4 Market Analysis shows the popup as requested */}
-                  {item.id === '1' && (
-                    <DialogContent className="max-w-3xl w-full">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-slate-800">{item.title}</h3>
+                      <p className="text-sm text-slate-600">created by {item.creator}</p>
+                    </div>
+                    {item.isActive && (
+                      <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                    )}
+                  </div>
+                </div>
+              ))}
+              {/* Dialog is outside the map, controlled by dialogOpen and selectedReport */}
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogContent className="max-w-3xl w-full">
+                  {selectedReport?.id === '1' ? (
+                    <>
                       <div className="overflow-y-auto max-h-[70vh] border rounded-lg bg-white p-4 text-black">
-                        {/* Render HTML content safely */}
                         <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
                       </div>
                       <div className="flex justify-end mt-4">
@@ -246,10 +248,10 @@ export const ReportDashboard = () => {
                           Download PDF
                         </Button>
                       </div>
-                    </DialogContent>
-                  )}
-                </Dialog>
-              ))}
+                    </>
+                  ) : null}
+                </DialogContent>
+              </Dialog>
             </div>
 
             {/* User Engagement */}
