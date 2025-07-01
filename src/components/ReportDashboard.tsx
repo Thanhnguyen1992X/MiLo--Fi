@@ -73,27 +73,16 @@ export const ReportDashboard = () => {
   useEffect(() => {
     const fetchLatestAnalysis = async () => {
       setLoading(true);
-      let { data, error } = await supabase
-        .from('stock_analysis')
-        .select('*');
-      console.log('All stock_analysis:', data, error);
-
-      if ((!data || data.length === 0 || !data[0].analysis_result)) {
-        const res = await supabase
-          .from('stock_analysis')
-          .select('analysis_result, created_at, analysis_date')
-          .order('analysis_date', { ascending: false })
-          .limit(1);
-        error = res.error;
-        console.log('Fetch by analysis_date:', data, error);
-      }
-
-      if (error) {
-        setReportAnalysis('Lỗi lấy dữ liệu từ Supabase');
-      } else if (data && data.length > 0 && data[0].analysis_result) {
-        setReportAnalysis(data[0].analysis_result);
-      } else {
+      const { data, error } = await supabase
+        .from('report')
+        .select('analysis_result')
+        .order('analysis_date', { ascending: false })
+        .limit(1)
+        .single();
+      if (error || !data?.analysis_result) {
         setReportAnalysis('Không có dữ liệu phân tích.');
+      } else {
+        setReportAnalysis(data.analysis_result);
       }
       setLoading(false);
     };
