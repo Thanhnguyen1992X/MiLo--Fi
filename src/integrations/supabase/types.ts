@@ -114,24 +114,6 @@ export type Database = {
         }
         Relationships: []
       }
-      stock_analysis: {
-        Row: {
-          id: string
-          created_at: string
-          analysis_result: string
-        }
-        Insert: {
-          id?: string
-          created_at?: string
-          analysis_result: string
-        }
-        Update: {
-          id?: string
-          created_at?: string
-          analysis_result?: string
-        }
-        Relationships: []
-      },
       report: {
         Row: {
           id: string;
