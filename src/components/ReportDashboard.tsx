@@ -17,6 +17,7 @@ import {
   Users
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { Dialog, DialogTrigger, DialogContent } from '@/components/ui/dialog';
 
 interface PlaylistItem {
   id: string;
@@ -32,6 +33,8 @@ export const ReportDashboard = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [reportAnalysis, setReportAnalysis] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [htmlContent, setHtmlContent] = useState<string>('');
 
   const playlistItems: PlaylistItem[] = [
     {
@@ -64,8 +67,6 @@ export const ReportDashboard = () => {
     }
   ];
 
-
-
   useEffect(() => {
     const fetchLatestAnalysis = async () => {
       setLoading(true);
@@ -96,10 +97,17 @@ export const ReportDashboard = () => {
     fetchLatestAnalysis();
   }, []);
 
+  // Load n8ndashboard.html content when dialog opens
+  useEffect(() => {
+    if (dialogOpen) {
+      fetch('/n8ndashboard.html')
+        .then((res) => res.text())
+        .then((html) => setHtmlContent(html));
+    }
+  }, [dialogOpen]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 p-6">
-    
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
         {/* Main Content Area - Vinyl Player Interface */}
         <div className="space-y-6">
@@ -197,28 +205,50 @@ export const ReportDashboard = () => {
 
             <div className="space-y-4">
               {playlistItems.map((item) => (
-                <div
-                  key={item.id}
-                  className={`p-4 rounded-2xl transition-all duration-300 cursor-pointer ${
-                    item.isActive
-                      ? 'bg-blue-500/20 backdrop-blur-sm border border-blue-200/50 shadow-lg transform scale-[1.02]'
-                      : 'bg-white/50 hover:bg-white/70 hover:shadow-md'
-                  }`}
-                  onClick={() => setActiveReport(item.id)}
-                >
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-slate-200 to-slate-300 rounded-lg flex items-center justify-center">
-                      <FileText className="w-6 h-6 text-slate-600" />
+                <Dialog key={item.id} open={dialogOpen && item.id === '1'} onOpenChange={(open) => setDialogOpen(open)}>
+                  <DialogTrigger asChild>
+                    <div
+                      className={`p-4 rounded-2xl transition-all duration-300 cursor-pointer ${
+                        item.isActive
+                          ? 'bg-blue-500/20 backdrop-blur-sm border border-blue-200/50 shadow-lg transform scale-[1.02]'
+                          : 'bg-white/50 hover:bg-white/70 hover:shadow-md'
+                      }`}
+                      onClick={() => {
+                        if (item.id === '1') setDialogOpen(true);
+                        setActiveReport(item.id);
+                      }}
+                    >
+                      <div className="flex items-center space-x-4">
+                        <div className="w-12 h-12 bg-gradient-to-br from-slate-200 to-slate-300 rounded-lg flex items-center justify-center">
+                          <FileText className="w-6 h-6 text-slate-600" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-slate-800">{item.title}</h3>
+                          <p className="text-sm text-slate-600">created by {item.creator}</p>
+                        </div>
+                        {item.isActive && (
+                          <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-slate-800">{item.title}</h3>
-                      <p className="text-sm text-slate-600">created by {item.creator}</p>
-                    </div>
-                    {item.isActive && (
-                      <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                    )}
-                  </div>
-                </div>
+                  </DialogTrigger>
+                  {/* Only Q4 Market Analysis shows the popup as requested */}
+                  {item.id === '1' && (
+                    <DialogContent className="max-w-3xl w-full">
+                      <div className="overflow-y-auto max-h-[70vh] border rounded-lg bg-white p-4 text-black">
+                        {/* Render HTML content safely */}
+                        <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+                      </div>
+                      <div className="flex justify-end mt-4">
+                        <Button
+                          onClick={() => window.location.href = 'https://www.npmjs.com/package/n8n-nodes-pdfco'}
+                        >
+                          Download PDF
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  )}
+                </Dialog>
               ))}
             </div>
 
