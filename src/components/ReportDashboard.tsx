@@ -36,32 +36,34 @@ export const ReportDashboard = () => {
   const dialogTriggerRef = useRef<HTMLButtonElement>(null);
   const [latestTieude, setLatestTieude] = useState<string>('');
   const [showModal, setShowModal] = useState(false);
+  const [tieudeList, setTieudeList] = useState<string[]>([]);
+  const [latestAnalysisResult, setLatestAnalysisResult] = useState<string>('');
 
   const playlistItems: PlaylistItem[] = [
     {
       id: '1',
-      title: 'Q4 Market Analysis',
+      title: tieudeList[0] || 'Không có tiêu đề',
       creator: '@analyst',
       thumbnail: '/placeholder.svg',
       isActive: false
     },
     {
       id: '2',
-      title: 'Portfolio Performance',
+      title: tieudeList[1] || 'Không có tiêu đề',
       creator: '@trader',
       thumbnail: '/placeholder.svg',
       isActive: false
     },
     {
       id: '3',
-      title: 'Economic Outlook',
+      title: tieudeList[2] || 'Không có tiêu đề',
       creator: '@economist',
       thumbnail: '/placeholder.svg',
       isActive: true
     },
     {
       id: '4',
-      title: 'Risk Assessment',
+      title: tieudeList[3] || 'Không có tiêu đề',
       creator: '@analyst',
       thumbnail: '/placeholder.svg',
       isActive: false
@@ -99,24 +101,64 @@ export const ReportDashboard = () => {
   }, []);
 
   useEffect(() => {
-    const fetchLatestTieude = async () => {
-      if (selectedReport?.id === '1') {
-        const { data, error } = await supabase
-          .from('report')
-          .select('tieude')
-          .order('date', { ascending: false })
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .single();
-        if (error || !data?.tieude) {
-          setLatestTieude('Không có tiêu đề mới nhất');
-        } else {
-          setLatestTieude(data.tieude);
-        }
+    const fetchTieudeByIndex = async () => {
+      if (!selectedReport) return;
+      const idx = playlistItems.findIndex(item => item.id === selectedReport.id);
+      const { data, error } = await supabase
+        .from('report')
+        .select('tieude')
+        .order('analysis_date', { ascending: false })
+        .range(idx, idx)
+        .limit(1);
+      if (error || !data || !data[0]?.tieude) {
+        setLatestTieude('Không có tiêu đề phù hợp');
+      } else {
+        setLatestTieude(data[0].tieude);
       }
     };
-    fetchLatestTieude();
+    fetchTieudeByIndex();
   }, [selectedReport]);
+
+  useEffect(() => {
+    const fetchAllTieude = async () => {
+      const { data, error } = await supabase
+        .from('report')
+        .select('tieude')
+        .order('analysis_date', { ascending: false });
+      if (error || !data) {
+        setTieudeList(['Không có tiêu đề', 'Không có tiêu đề', 'Không có tiêu đề', 'Không có tiêu đề']);
+      } else {
+        const titles = data.map(r => r.tieude).slice(0, 4);
+        while (titles.length < 4) titles.push('Không có tiêu đề');
+        setTieudeList(titles);
+      }
+    };
+    fetchAllTieude();
+  }, []);
+
+  useEffect(() => {
+    const fetchAnalysisResultByTieude = async () => {
+      if (!selectedReport) return;
+      const idx = playlistItems.findIndex(item => item.id === selectedReport.id);
+      const tieude = tieudeList[idx];
+      if (!tieude || tieude === 'Không có tiêu đề') {
+        setLatestAnalysisResult('Không có nội dung phân tích');
+        return;
+      }
+      const { data, error } = await supabase
+        .from('report')
+        .select('analysis_result')
+        .eq('tieude', tieude)
+        .limit(1)
+        .single();
+      if (error || !data?.analysis_result) {
+        setLatestAnalysisResult('Không có nội dung phân tích');
+      } else {
+        setLatestAnalysisResult(data.analysis_result);
+      }
+    };
+    fetchAnalysisResultByTieude();
+  }, [selectedReport, tieudeList]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 p-6">
@@ -226,7 +268,7 @@ export const ReportDashboard = () => {
                   }`}
                   onClick={() => {
                     setSelectedReport(item);
-                    if (item.id === '1') setShowModal(true);
+                    setShowModal(true);
                     setActiveReport(item.id);
                   }}
                 >
@@ -244,13 +286,13 @@ export const ReportDashboard = () => {
                   </div>
                 </div>
               ))}
-              {showModal && selectedReport?.id === '1' && (
+              {showModal && selectedReport && (
                 <div style={{
                   position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
                   background: 'rgba(0,0,0,0.5)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center'
                 }}>
                   <div style={{ background: '#fff', padding: 32, borderRadius: 8, minWidth: 300, maxWidth: 500, boxShadow: '0 8px 32px rgba(0,0,0,0.2)' }}>
-                    <div className="text-2xl font-bold text-center mb-4">{latestTieude}</div>
+                    <div className="text-2xl font-bold text-center mb-4">{latestAnalysisResult}</div>
                     <div className="flex justify-end mt-4 gap-2">
                       <Button
                         onClick={() => window.location.href = 'https://www.npmjs.com/package/n8n-nodes-pdfco'}
