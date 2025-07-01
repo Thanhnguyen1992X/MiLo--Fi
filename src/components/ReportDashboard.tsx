@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -33,8 +33,8 @@ export const ReportDashboard = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [reportAnalysis, setReportAnalysis] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedReport, setSelectedReport] = useState<PlaylistItem | null>(null);
+  const dialogTriggerRef = useRef<HTMLButtonElement>(null);
 
   const playlistItems: PlaylistItem[] = [
     {
@@ -205,7 +205,9 @@ export const ReportDashboard = () => {
                   }`}
                   onClick={() => {
                     setSelectedReport(item);
-                    if (item.id === '1') setDialogOpen(true);
+                    if (item.id === '1' && dialogTriggerRef.current) {
+                      dialogTriggerRef.current.click();
+                    }
                     setActiveReport(item.id);
                   }}
                 >
@@ -223,10 +225,9 @@ export const ReportDashboard = () => {
                   </div>
                 </div>
               ))}
-              {/* Dialog is outside the map, controlled by dialogOpen and selectedReport */}
-              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <Dialog>
                 <DialogTrigger asChild>
-                  <button style={{ display: 'none' }} aria-hidden="true" tabIndex={-1}></button>
+                  <button ref={dialogTriggerRef} style={{ display: 'none' }} aria-hidden="true" tabIndex={-1}></button>
                 </DialogTrigger>
                 <DialogContent className="max-w-3xl w-full">
                   {selectedReport?.id === '1' ? (
