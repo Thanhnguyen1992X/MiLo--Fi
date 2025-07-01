@@ -17,7 +17,6 @@ import {
   Users
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { Dialog, DialogTrigger, DialogContent } from '@/components/ui/dialog';
 
 interface PlaylistItem {
   id: string;
@@ -36,6 +35,7 @@ export const ReportDashboard = () => {
   const [selectedReport, setSelectedReport] = useState<PlaylistItem | null>(null);
   const dialogTriggerRef = useRef<HTMLButtonElement>(null);
   const [latestTieude, setLatestTieude] = useState<string>('');
+  const [showModal, setShowModal] = useState(false);
 
   const playlistItems: PlaylistItem[] = [
     {
@@ -105,6 +105,7 @@ export const ReportDashboard = () => {
           .from('report')
           .select('tieude')
           .order('date', { ascending: false })
+          .order('created_at', { ascending: false })
           .limit(1)
           .single();
         if (error || !data?.tieude) {
@@ -225,9 +226,7 @@ export const ReportDashboard = () => {
                   }`}
                   onClick={() => {
                     setSelectedReport(item);
-                    if (item.id === '1' && dialogTriggerRef.current) {
-                      dialogTriggerRef.current.click();
-                    }
+                    if (item.id === '1') setShowModal(true);
                     setActiveReport(item.id);
                   }}
                 >
@@ -245,25 +244,26 @@ export const ReportDashboard = () => {
                   </div>
                 </div>
               ))}
-              <Dialog>
-                <DialogTrigger asChild>
-                  <button ref={dialogTriggerRef} style={{ display: 'none' }} aria-hidden="true" tabIndex={-1}></button>
-                </DialogTrigger>
-                <DialogContent className="max-w-3xl w-full">
-                  {selectedReport?.id === '1' ? (
-                    <>
-                      <div className="text-2xl font-bold text-center mb-4">{latestTieude}</div>
-                      <div className="flex justify-end mt-4">
-                        <Button
-                          onClick={() => window.location.href = 'https://www.npmjs.com/package/n8n-nodes-pdfco'}
-                        >
-                          Download PDF
-                        </Button>
-                      </div>
-                    </>
-                  ) : null}
-                </DialogContent>
-              </Dialog>
+              {showModal && selectedReport?.id === '1' && (
+                <div style={{
+                  position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                  background: 'rgba(0,0,0,0.5)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center'
+                }}>
+                  <div style={{ background: '#fff', padding: 32, borderRadius: 8, minWidth: 300, maxWidth: 500, boxShadow: '0 8px 32px rgba(0,0,0,0.2)' }}>
+                    <div className="text-2xl font-bold text-center mb-4">{latestTieude}</div>
+                    <div className="flex justify-end mt-4 gap-2">
+                      <Button
+                        onClick={() => window.location.href = 'https://www.npmjs.com/package/n8n-nodes-pdfco'}
+                      >
+                        Download PDF
+                      </Button>
+                      <Button onClick={() => setShowModal(false)} variant="secondary">
+                        Đóng
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* User Engagement */}
