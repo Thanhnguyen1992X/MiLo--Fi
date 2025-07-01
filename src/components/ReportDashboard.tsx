@@ -225,6 +225,9 @@ export const ReportDashboard = () => {
               ))}
               {/* Dialog is outside the map, controlled by dialogOpen and selectedReport */}
               <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogTrigger asChild>
+                  <button style={{ display: 'none' }} aria-hidden="true" tabIndex={-1}></button>
+                </DialogTrigger>
                 <DialogContent className="max-w-3xl w-full">
                   {selectedReport?.id === '1' ? (
                     <>
