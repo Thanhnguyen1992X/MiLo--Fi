@@ -76,7 +76,7 @@ export const ReportDashboard = () => {
       const { data, error } = await supabase
         .from('report')
         .select('analysis_result')
-        .order('analysis_date', { ascending: false })
+          .order('analysis_date', { ascending: false })
         .limit(1)
         .single();
       if (error || !data?.analysis_result) {

@@ -20,13 +20,15 @@ import {
   DollarSign,
   Target,
   Users,
-  Shield
+  Shield,
+  MoreHorizontal
 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 
 export const FinancialDashboard = () => {
@@ -596,6 +598,129 @@ export const FinancialDashboard = () => {
 
         {/* Dashboard Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Financial Analysis */}
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div className="flex items-center gap-3">
+                <BarChart3 className="w-6 h-6 text-blue-400" />
+                <CardTitle className="text-xl text-white">Phân tích dòng tiền tệ</CardTitle>
+              </div>
+              <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+                <MoreHorizontal className="w-5 h-5" />
+              </Button>
+            </CardHeader>
+            <CardContent className="pt-4 pb-6">
+              <div className="w-full h-48 mb-4">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={[
+                    { name: 'Tiền vào', value: 2850 },
+                    { name: 'Tiền ra', value: -1250 },
+                    { name: 'Dòng ròng', value: 1600 },
+                  ]}>
+                    <XAxis dataKey="name" tick={{ fill: '#94a3b8', fontSize: 12 }} axisLine={{ stroke: '#334155' }} />
+                    <YAxis tick={{ fill: '#94a3b8', fontSize: 12 }} axisLine={{ stroke: '#334155' }} />
+                    <Tooltip contentStyle={{ background: '#1e293b', border: 'none', color: '#fff' }} />
+                    <Bar dataKey="value">
+                      <Cell key="in" fill="#22c55e" />
+                      <Cell key="out" fill="#ef4444" />
+                      <Cell key="net" fill="hsl(var(--primary))" />
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-gray-400">Tổng dòng tiền vào:</span>
+                  <span className="font-medium text-green-500">+2,850 tỷ VND</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-gray-400">Tổng dòng tiền ra:</span>
+                  <span className="font-medium text-red-500">-1,250 tỷ VND</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-gray-400">Dòng tiền ròng:</span>
+                  <span className="font-medium text-primary">+1,600 tỷ VND</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* DuPont Analysis */}
+          <Card className="bg-slate-900 border-slate-800">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <TrendingUp className="w-6 h-6 text-blue-400" />
+                <CardTitle className="text-xl text-white">Phân tích DuPont</CardTitle>
+              </div>
+              <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+                <MoreHorizontal className="w-5 h-5" />
+              </Button>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="flex flex-col items-center">
+                {/* ROE Section */}
+                <div className="text-center mb-6">
+                  <div className="text-sm font-medium text-slate-300">ROE</div>
+                  <div className="text-2xl font-bold text-blue-400">22.5%</div>
+                </div>
+                {/* Separator */}
+                <div className="flex items-center justify-center w-full mb-6">
+                  <div className="w-1/3 h-px bg-slate-700"></div>
+                  <div className="mx-3 text-slate-500 font-medium">×</div>
+                  <div className="w-1/3 h-px bg-slate-700"></div>
+                </div>
+                {/* Main Metrics */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 w-full">
+                  <div className="text-center bg-slate-800/50 rounded-lg p-4">
+                    <div className="text-sm font-medium text-slate-300 mb-2">Net Profit Margin</div>
+                    <div className="text-xl font-bold text-green-400 mb-3">35.2%</div>
+                    <div className="flex flex-col items-center">
+                      <div className="text-xs text-slate-500">Net Income</div>
+                      <div className="w-12 h-px bg-slate-600 my-1"></div>
+                      <div className="text-xs text-slate-500 mb-2">Revenue</div>
+                      <div className="text-sm font-medium text-slate-300">7,500 / 21,300</div>
+                    </div>
+                  </div>
+                  
+                  <div className="text-center bg-slate-800/50 rounded-lg p-4">
+                    <div className="text-sm font-medium text-slate-300 mb-2">Asset Turnover</div>
+                    <div className="text-xl font-bold text-yellow-400 mb-3">0.64x</div>
+                    <div className="flex flex-col items-center">
+                      <div className="text-xs text-slate-500">Revenue</div>
+                      <div className="w-12 h-px bg-slate-600 my-1"></div>
+                      <div className="text-xs text-slate-500 mb-2">Total Assets</div>
+                      <div className="text-sm font-medium text-slate-300">21,300 / 33,280</div>
+                    </div>
+                  </div>
+                </div>
+                {/* Separator */}
+                <div className="flex items-center justify-center w-full mb-6">
+                  <div className="w-1/3 h-px bg-slate-700"></div>
+                  <div className="mx-3 text-slate-500 font-medium">×</div>
+                  <div className="w-1/3 h-px bg-slate-700"></div>
+                </div>
+                {/* Detail Metrics */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+                  <div className="text-center bg-slate-800/30 rounded-lg p-3">
+                    <div className="text-sm font-medium text-slate-300 mb-1">Operating Margin</div>
+                    <div className="text-lg font-bold text-purple-400 mb-2">42.5%</div>
+                    <div className="text-xs text-slate-500">9,052 / 21,300</div>
+                  </div>
+                  <div className="text-center bg-slate-800/30 rounded-lg p-3">
+                    <div className="text-sm font-medium text-slate-300 mb-1">Tax Burden</div>
+                    <div className="text-lg font-bold text-orange-400 mb-2">82.8%</div>
+                    <div className="text-xs text-slate-500">7,500 / 9,052</div>
+                  </div>
+                  <div className="text-center bg-slate-800/30 rounded-lg p-3">
+                    <div className="text-sm font-medium text-slate-300 mb-1">Financial Leverage</div>
+                    <div className="text-lg font-bold text-pink-400 mb-2">1.56x</div>
+                    <div className="text-xs text-slate-500">33,280 / 21,330</div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Currency Performance */}
           <Card className="bg-slate-900/50 border-slate-800">
             <CardHeader>
@@ -730,277 +855,1141 @@ export const FinancialDashboard = () => {
               <div ref={technicalChartRef} className="w-full h-40"></div>
             </CardContent>
           </Card>
-        </div>
 
-        {/* News Feed Widget */}
-        <Card className="bg-slate-900/50 border-slate-800">
-          <CardHeader>
-            <CardTitle className="text-white">Market News</CardTitle>
-            <Tabs defaultValue="forex" className="mt-2">
-              <TabsList>
-                <TabsTrigger value="forex">Forex</TabsTrigger>
-                <TabsTrigger value="global">Global</TabsTrigger>
-              </TabsList>
-              <TabsContent value="forex">
-                <div className="space-y-3 max-h-80 overflow-y-auto">
-                  {[
-                    {
-                      title: "ECB Expected to Hold Rates Steady Amid Inflation Concerns",
-                      desc: "The European Central Bank is expected to maintain current interest rates in today's meeting as inflation remains above target despite recent economic data showing signs of cooling.",
-                      source: "Bloomberg",
-                      time: "2 hours ago"
-                    },
-                    {
-                      title: "Dollar Weakens as Fed Officials Signal Potential Rate Cut",
-                      desc: "The US dollar declined against major currencies after Federal Reserve officials hinted at a possible rate cut in September, citing improving inflation metrics and labor market concerns.",
-                      source: "Reuters",
-                      time: "4 hours ago"
-                    },
-                    {
-                      title: "Bank of Japan Maintains Ultra-Loose Monetary Policy",
-                      desc: "The Bank of Japan kept its ultra-loose monetary policy unchanged in its latest meeting, continuing to buck the global trend of monetary tightening despite the yen's recent weakness.",
-                      source: "Financial Times",
-                      time: "6 hours ago"
-                    },
-                    {
-                      title: "GBP/USD Rallies on Strong UK Retail Sales Data",
-                      desc: "The British pound strengthened against the US dollar following better-than-expected UK retail sales data, which showed a 0.8% increase month-over-month, exceeding analyst forecasts of 0.3%.",
-                      source: "CNBC",
-                      time: "8 hours ago"
-                    }
-                  ].map((item, idx) => (
-                    <div key={idx} className="p-3 border-b border-slate-700">
-                      <h4 className="text-sm font-medium mb-1">{item.title}</h4>
-                      <p className="text-xs text-slate-400 mb-2">{item.desc}</p>
-                      <div className="flex items-center text-xs text-slate-500">
-                        <span>{item.source}</span>
-                        <span className="mx-2">•</span>
-                        <span>{item.time}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </TabsContent>
-              <TabsContent value="global">
-                <div className="p-3 text-xs text-slate-400">No global news available.</div>
-              </TabsContent>
-            </Tabs>
-          </CardHeader>
-          <CardContent>
-            <Button variant="link" className="w-full text-xs text-primary hover:underline">View all news</Button>
-          </CardContent>
-        </Card>
-
-        {/* Trading Signals Widget */}
-        <Card className="bg-slate-900/50 border-slate-800">
-          <CardHeader>
-            <CardTitle className="text-white">Trading Signals</CardTitle>
-            <Button variant="ghost" size="sm" className="ml-auto"><RefreshCw className="w-4 h-4" /></Button>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3 max-h-80 overflow-y-auto">
-              {[
-                {
-                  pair: "EUR/USD",
-                  type: "BUY",
-                  entry: "1.0835",
-                  tp: "1.0890",
-                  sl: "1.0805",
-                  timeframe: "4H",
-                  strength: 75
-                },
-                {
-                  pair: "GBP/JPY",
-                  type: "SELL",
-                  entry: "195.40",
-                  tp: "194.60",
-                  sl: "195.80",
-                  timeframe: "1D",
-                  strength: 85
-                },
-                {
-                  pair: "USD/CAD",
-                  type: "SELL",
-                  entry: "1.3650",
-                  tp: "1.3580",
-                  sl: "1.3685",
-                  timeframe: "4H",
-                  strength: 65
-                }
-              ].map((item, idx) => (
-                <div key={idx} className="p-3 border-b border-slate-700">
-                  <div className="flex justify-between items-start">
+          {/* Momentum Rank */}
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div className="flex items-center gap-3">
+                <BarChart3 className="w-6 h-6 text-blue-400" />
+                <CardTitle className="text-xl text-white">Xếp hạng động lượng</CardTitle>
+              </div>
+              <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+                <MoreHorizontal className="w-5 h-5" />
+              </Button>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-xs text-gray-500">Cập nhật: 20/06/2025</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Chỉ báo kỹ thuật */}
+                <div>
+                  <h3 className="text-xs font-medium mb-2">Chỉ báo kỹ thuật</h3>
+                  <div className="space-y-4">
                     <div>
-                      <div className="flex items-center space-x-2">
-                        <span className="text-sm font-medium">{item.pair}</span>
-                        <span className={`text-xs px-1.5 py-0.5 rounded ${item.type === "BUY" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>{item.type}</span>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">RSI (14)</span>
+                        <span className="text-xs text-slate-300">72.5</span>
                       </div>
-                      <div className="flex items-center space-x-2 mt-1 text-xs text-slate-400">
-                        <span>Entry: {item.entry}</span>
-                        <span>TP: {item.tp}</span>
-                        <span>SL: {item.sl}</span>
+                      <Progress value={72} />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">MACD</span>
+                        <span className="text-xs text-slate-300">+0.35</span>
                       </div>
+                      <Progress value={65} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
                     </div>
-                    <div className="text-xs text-slate-400">{item.timeframe}</div>
-                  </div>
-                  <div className="mt-2">
-                    <div className="text-xs text-slate-400">Signal strength</div>
-                    <div className="w-full bg-slate-700 rounded-full h-1.5 mt-1">
-                      <div className={`${item.type === "BUY" ? "bg-green-400" : "bg-red-400"} h-1.5 rounded-full`} style={{ width: `${item.strength}%` }}></div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">Stochastic</span>
+                        <span className="text-xs text-slate-300">85.2</span>
+                      </div>
+                      <Progress value={85} />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">ADX</span>
+                        <span className="text-xs text-slate-300">32.4</span>
+                      </div>
+                      <Progress value={32} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">CCI</span>
+                        <span className="text-xs text-slate-300">+156.8</span>
+                      </div>
+                      <Progress value={78} />
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-            <div className="flex items-center justify-between mt-3">
-              <span className="text-xs text-slate-400">Last updated: 12:45 PM</span>
-              <Button variant="link" className="text-xs text-primary hover:underline">View all signals</Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Personal Strength Widget */}
-        <Card className="bg-slate-900/50 border-slate-800">
-          <CardHeader>
-            <CardTitle className="text-white">Điểm mạnh</CardTitle>
-            <span className="text-xs text-gray-500">Cập nhật: 18/06/2025</span>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {[
-                { label: "Tăng trưởng doanh thu", value: 85 },
-                { label: "Biên lợi nhuận", value: 72 },
-                { label: "ROE", value: 68 },
-                { label: "Chất lượng tài sản", value: 76 },
-                { label: "Thanh khoản", value: 82 },
-                { label: "Quản trị rủi ro", value: 79 },
-                { label: "Chuyển đổi số", value: 90 }
-              ].map((item, idx) => (
-                <div key={idx}>
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-xs font-medium">{item.label}</span>
-                    <span className="text-xs font-medium">{item.value}%</span>
-                  </div>
-                  <Progress value={item.value} />
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Profitability Rank Widget */}
-        <Card className="bg-slate-900/50 border-slate-800">
-          <CardHeader>
-            <CardTitle className="text-white">Xếp hạng khả năng sinh lời</CardTitle>
-            <span className="text-xs text-gray-500">So với ngành</span>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {[
-                { label: "ROE", value: 85, text: "22.5%" },
-                { label: "ROA", value: 75, text: "1.8%" },
-                { label: "NIM", value: 80, text: "4.2%" },
-                { label: "CIR", value: 70, text: "35.8%" },
-                { label: "CASA", value: 60, text: "22.4%" },
-                { label: "Tỷ lệ nợ xấu", value: 82, text: "1.2%" }
-              ].map((item, idx) => (
-                <div key={idx} className="flex items-center">
-                  <span className="text-xs w-28">{item.label}</span>
-                  <div className="flex-1 flex items-center">
-                    <div className="w-full bg-gray-200 h-4 rounded-sm overflow-hidden">
-                      <div className="bg-green-500 h-full" style={{ width: `${item.value}%` }}></div>
+                {/* Biến động giá */}
+                <div>
+                  <h3 className="text-xs font-medium mb-2">Biến động giá</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">1 tuần</span>
+                        <span className="text-xs text-green-500">+6.5%</span>
+                      </div>
+                      <Progress value={65} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
                     </div>
-                    <span className="ml-2 text-xs font-medium">{item.text}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* EPS Rank Widget */}
-        <Card className="bg-slate-900/50 border-slate-800">
-          <CardHeader>
-            <CardTitle className="text-white">Xếp hạng EPS</CardTitle>
-            <span className="text-xs text-gray-500">So với Top 10 ngân hàng</span>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {[
-                { label: "VCB", value: 95, text: "7,250" },
-                { label: "TCB", value: 92, text: "6,820" },
-                { label: "MBB", value: 88, text: "6,450" },
-                { label: "MIL", value: 85, text: "6,120", highlight: true },
-                { label: "ACB", value: 82, text: "5,980" },
-                { label: "VPB", value: 78, text: "5,640" },
-                { label: "HDB", value: 65, text: "4,850" }
-              ].map((item, idx) => (
-                <div key={idx} className={`flex items-center${item.highlight ? " font-medium text-primary" : ""}`}>
-                  <span className={`text-xs w-28${item.highlight ? " text-primary" : ""}`}>{item.label}</span>
-                  <div className="flex-1 flex items-center">
-                    <div className="w-full bg-gray-200 h-4 rounded-sm overflow-hidden">
-                      <div className={`${item.highlight ? "bg-primary" : "bg-green-500"} h-full`} style={{ width: `${item.value}%` }}></div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">1 tháng</span>
+                        <span className="text-xs text-green-500">+12.8%</span>
+                      </div>
+                      <Progress value={85} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
                     </div>
-                    <span className={`ml-2 text-xs font-medium${item.highlight ? " text-primary" : ""}`}>{item.text}</span>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">3 tháng</span>
+                        <span className="text-xs text-green-500">+18.5%</span>
+                      </div>
+                      <Progress value={92} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">6 tháng</span>
+                        <span className="text-xs text-green-500">+24.2%</span>
+                      </div>
+                      <Progress value={78} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">1 năm</span>
+                        <span className="text-xs text-green-500">+42.8%</span>
+                      </div>
+                      <Progress value={95} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Warning Signs Widget */}
-        <Card className="bg-slate-900/50 border-slate-800">
-          <CardHeader>
-            <CardTitle className="text-white">Tín hiệu cảnh báo</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Alert variant="destructive" className="mb-4">
-              <AlertTriangle className="h-4 w-4" />
-              <AlertTitle>Giá cổ phiếu đã tăng 15% trong 5 phiên gần nhất</AlertTitle>
-              <AlertDescription>
-                Có thể xuất hiện áp lực chốt lời trong ngắn hạn.
-              </AlertDescription>
-            </Alert>
-            <div className="space-y-3">
-              {[
-                { color: "green", text: "RSI (14) đang ở vùng quá mua", value: "72.5" },
-                { color: "green", text: "Khối ngoại bán ròng 5 phiên liên tiếp", value: "-125 tỷ" },
-                { color: "yellow", text: "P/E cao hơn trung bình ngành", value: "+12%" },
-                { color: "yellow", text: "Tỷ lệ dự phòng/nợ xấu giảm nhẹ", value: "-2.5%" },
-                { color: "red", text: "Biến động giá cao hơn trung bình 20 phiên", value: "+35%" }
-              ].map((item, idx) => (
-                <div key={idx} className="flex items-center">
-                  <div className={`w-2 h-2 bg-${item.color}-500 rounded-full mr-2`}></div>
-                  <span className="text-xs flex-1">{item.text}</span>
-                  <span className="text-xs font-medium">{item.value}</span>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Ownership & Insider Details Widget */}
-        <Card className="bg-slate-900/50 border-slate-800">
-          <CardHeader>
-            <CardTitle className="text-white">Sở hữu & Giao dịch nội bộ</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-xs font-medium mb-2">Cơ cấu sở hữu</h3>
-                <div ref={ownershipChartRef} className="h-40 w-full" />
               </div>
-              <div>
-                <h3 className="text-xs font-medium mb-2">So sánh P/E</h3>
-                <div ref={peComparisonChartRef} className="h-24 w-full" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-      
+            </CardContent>
+          </Card>
 
+          {/* Dividend & Yield Rank */}
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-xl text-white">Xếp hạng cổ tức & Lợi suất</CardTitle>
+              <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+                <MoreHorizontal className="w-5 h-5" />
+              </Button>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Cổ tức tiền mặt */}
+                <div>
+                  <h3 className="text-xs font-medium mb-2">Cổ tức tiền mặt</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-16 text-slate-400">2024E</span>
+                        <span className="text-xs text-slate-300">1,500đ</span>
+                      </div>
+                      <Progress value={85} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-16 text-slate-400">2023</span>
+                        <span className="text-xs text-slate-300">1,200đ</span>
+                      </div>
+                      <Progress value={75} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-16 text-slate-400">2022</span>
+                        <span className="text-xs text-slate-300">1,000đ</span>
+                      </div>
+                      <Progress value={65} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-16 text-slate-400">2021</span>
+                        <span className="text-xs text-slate-300">800đ</span>
+                      </div>
+                      <Progress value={55} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-16 text-slate-400">2020</span>
+                        <span className="text-xs text-slate-300">600đ</span>
+                      </div>
+                      <Progress value={45} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                  </div>
+                </div>
+                {/* Lợi suất cổ tức */}
+                <div>
+                  <h3 className="text-xs font-medium mb-2">Lợi suất cổ tức</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-16 text-slate-400">MIL</span>
+                        <span className="text-xs text-green-500">7.8%</span>
+                      </div>
+                      <Progress value={78} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-16 text-slate-400">VCB</span>
+                        <span className="text-xs text-green-500">4.5%</span>
+                      </div>
+                      <Progress value={45} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-16 text-slate-400">TCB</span>
+                        <span className="text-xs text-green-500">5.2%</span>
+                      </div>
+                      <Progress value={52} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-16 text-slate-400">ACB</span>
+                        <span className="text-xs text-green-500">6.8%</span>
+                      </div>
+                      <Progress value={68} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-16 text-slate-400">Ngành</span>
+                        <span className="text-xs text-green-500">5.8%</span>
+                      </div>
+                      <Progress value={58} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Trading Signals */}
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div className="flex items-center gap-3">
+                <TrendingUp className="w-6 h-6 text-blue-400" />
+                <CardTitle className="text-xl text-white">Tín hiệu giao dịch</CardTitle>
+              </div>
+              <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+                <MoreHorizontal className="w-5 h-5" />
+              </Button>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-xs text-gray-500">Cập nhật: 20/06/2025</span>
+              </div>
+              <div className="bg-red-50 border border-red-200 rounded p-3 mb-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="w-6 h-6 flex items-center justify-center text-red-500 mr-2">
+                      <i className="ri-alert-line"></i>
+                    </div>
+                    <span className="text-sm font-medium text-red-700">Tín hiệu bán</span>
+                  </div>
+                  <span className="text-xs text-red-700 font-medium">RSI quá mua</span>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-xs font-medium mb-2">Chỉ báo kỹ thuật</h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                      <span className="text-xs text-gray-500">RSI (14)</span>
+                      <span className="text-xs font-medium text-red-500">72.5</span>
+                    </div>
+                    <div className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                      <span className="text-xs text-gray-500">MACD</span>
+                      <span className="text-xs font-medium text-green-500">Tăng</span>
+                    </div>
+                    <div className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                      <span className="text-xs text-gray-500">MA (20)</span>
+                      <span className="text-xs font-medium text-green-500">Trên</span>
+                    </div>
+                    <div className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                      <span className="text-xs text-gray-500">MA (50)</span>
+                      <span className="text-xs font-medium text-green-500">Trên</span>
+                    </div>
+                    <div className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                      <span className="text-xs text-gray-500">Bollinger</span>
+                      <span className="text-xs font-medium text-red-500">Trên dải</span>
+                    </div>
+                    <div className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                      <span className="text-xs text-gray-500">Stochastic</span>
+                      <span className="text-xs font-medium text-red-500">Quá mua</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-xs font-medium mb-2">Mức hỗ trợ & kháng cự</h3>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-red-500">Kháng cự 2</span>
+                      <span className="text-xs font-medium">21,500đ</span>
+                      <span className="text-xs text-gray-500">+11.7%</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-red-500">Kháng cự 1</span>
+                      <span className="text-xs font-medium">20,200đ</span>
+                      <span className="text-xs text-gray-500">+4.9%</span>
+                    </div>
+                    <div className="flex items-center justify-between font-medium">
+                      <span className="text-xs text-primary">Giá hiện tại</span>
+                      <span className="text-xs text-primary">19,250đ</span>
+                      <span className="text-xs text-primary">0.0%</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-green-500">Hỗ trợ 1</span>
+                      <span className="text-xs font-medium">18,400đ</span>
+                      <span className="text-xs text-gray-500">-4.4%</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-green-500">Hỗ trợ 2</span>
+                      <span className="text-xs font-medium">17,500đ</span>
+                      <span className="text-xs text-gray-500">-9.1%</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-xs font-medium mb-2">Khuyến nghị</h3>
+                  <div className="space-y-2">
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
+                      <span className="text-xs">Chốt lời một phần ở vùng giá hiện tại</span>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
+                      <span className="text-xs">Đặt stop loss ở mức 18,400đ</span>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
+                      <span className="text-xs">Theo dõi khối lượng giao dịch trong phiên tới</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Valuation Metrics */}
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div className="flex items-center gap-3">
+                <BarChart3 className="w-6 h-6 text-blue-400" />
+                <CardTitle className="text-xl text-white">Chỉ số định giá</CardTitle>
+              </div>
+              <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+                <MoreHorizontal className="w-5 h-5" />
+              </Button>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-xs text-gray-500">Cập nhật: 20/06/2025</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Chỉ số định giá */}
+                <div>
+                  <h3 className="text-xs font-medium mb-2">Chỉ số định giá</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">PE</span>
+                        <span className="text-xs text-slate-300">15.2</span>
+                      </div>
+                      <Progress value={72} />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">PB</span>
+                        <span className="text-xs text-slate-300">2.3</span>
+                      </div>
+                      <Progress value={65} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">PS</span>
+                        <span className="text-xs text-slate-300">1.8</span>
+                      </div>
+                      <Progress value={85} />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">PCF</span>
+                        <span className="text-xs text-slate-300">12.5</span>
+                      </div>
+                      <Progress value={32} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">EV/EBITDA</span>
+                        <span className="text-xs text-slate-300">10.2</span>
+                      </div>
+                      <Progress value={78} />
+                    </div>
+                  </div>
+                </div>
+                {/* Chỉ số tài chính */}
+                <div>
+                  <h3 className="text-xs font-medium mb-2">Chỉ số tài chính</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">ROE</span>
+                        <span className="text-xs text-green-500">22.5%</span>
+                      </div>
+                      <Progress value={78} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">ROA</span>
+                        <span className="text-xs text-green-500">10.8%</span>
+                      </div>
+                      <Progress value={45} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">ROIC</span>
+                        <span className="text-xs text-green-500">15.2%</span>
+                      </div>
+                      <Progress value={52} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">EPS</span>
+                        <span className="text-xs text-green-500">12.8</span>
+                      </div>
+                      <Progress value={68} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">BVPS</span>
+                        <span className="text-xs text-green-500">250đ</span>
+                      </div>
+                      <Progress value={58} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Trading Signals */}
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div className="flex items-center gap-3">
+                <TrendingUp className="w-6 h-6 text-blue-400" />
+                <CardTitle className="text-xl text-white">Tín hiệu giao dịch</CardTitle>
+              </div>
+              <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+                <MoreHorizontal className="w-5 h-5" />
+              </Button>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-xs text-gray-500">Cập nhật: 20/06/2025</span>
+              </div>
+              <div className="bg-red-50 border border-red-200 rounded p-3 mb-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="w-6 h-6 flex items-center justify-center text-red-500 mr-2">
+                      <i className="ri-alert-line"></i>
+                    </div>
+                    <span className="text-sm font-medium text-red-700">Tín hiệu bán</span>
+                  </div>
+                  <span className="text-xs text-red-700 font-medium">RSI quá mua</span>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-xs font-medium mb-2">Chỉ báo kỹ thuật</h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                      <span className="text-xs text-gray-500">RSI (14)</span>
+                      <span className="text-xs font-medium text-red-500">72.5</span>
+                    </div>
+                    <div className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                      <span className="text-xs text-gray-500">MACD</span>
+                      <span className="text-xs font-medium text-green-500">Tăng</span>
+                    </div>
+                    <div className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                      <span className="text-xs text-gray-500">MA (20)</span>
+                      <span className="text-xs font-medium text-green-500">Trên</span>
+                    </div>
+                    <div className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                      <span className="text-xs text-gray-500">MA (50)</span>
+                      <span className="text-xs font-medium text-green-500">Trên</span>
+                    </div>
+                    <div className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                      <span className="text-xs text-gray-500">Bollinger</span>
+                      <span className="text-xs font-medium text-red-500">Trên dải</span>
+                    </div>
+                    <div className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                      <span className="text-xs text-gray-500">Stochastic</span>
+                      <span className="text-xs font-medium text-red-500">Quá mua</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-xs font-medium mb-2">Mức hỗ trợ & kháng cự</h3>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-red-500">Kháng cự 2</span>
+                      <span className="text-xs font-medium">21,500đ</span>
+                      <span className="text-xs text-gray-500">+11.7%</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-red-500">Kháng cự 1</span>
+                      <span className="text-xs font-medium">20,200đ</span>
+                      <span className="text-xs text-gray-500">+4.9%</span>
+                    </div>
+                    <div className="flex items-center justify-between font-medium">
+                      <span className="text-xs text-primary">Giá hiện tại</span>
+                      <span className="text-xs text-primary">19,250đ</span>
+                      <span className="text-xs text-primary">0.0%</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-green-500">Hỗ trợ 1</span>
+                      <span className="text-xs font-medium">18,400đ</span>
+                      <span className="text-xs text-gray-500">-4.4%</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-green-500">Hỗ trợ 2</span>
+                      <span className="text-xs font-medium">17,500đ</span>
+                      <span className="text-xs text-gray-500">-9.1%</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-xs font-medium mb-2">Khuyến nghị</h3>
+                  <div className="space-y-2">
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
+                      <span className="text-xs">Chốt lời một phần ở vùng giá hiện tại</span>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
+                      <span className="text-xs">Đặt stop loss ở mức 18,400đ</span>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
+                      <span className="text-xs">Theo dõi khối lượng giao dịch trong phiên tới</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Valuation Metrics */}
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div className="flex items-center gap-3">
+                <BarChart3 className="w-6 h-6 text-blue-400" />
+                <CardTitle className="text-xl text-white">Chỉ số định giá</CardTitle>
+              </div>
+              <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+                <MoreHorizontal className="w-5 h-5" />
+              </Button>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-xs text-gray-500">Cập nhật: 20/06/2025</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Chỉ số định giá */}
+                <div>
+                  <h3 className="text-xs font-medium mb-2">Chỉ số định giá</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">PE</span>
+                        <span className="text-xs text-slate-300">15.2</span>
+                      </div>
+                      <Progress value={72} />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">PB</span>
+                        <span className="text-xs text-slate-300">2.3</span>
+                      </div>
+                      <Progress value={65} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">PS</span>
+                        <span className="text-xs text-slate-300">1.8</span>
+                      </div>
+                      <Progress value={85} />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">PCF</span>
+                        <span className="text-xs text-slate-300">12.5</span>
+                      </div>
+                      <Progress value={32} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">EV/EBITDA</span>
+                        <span className="text-xs text-slate-300">10.2</span>
+                      </div>
+                      <Progress value={78} />
+                    </div>
+                  </div>
+                </div>
+                {/* Chỉ số tài chính */}
+                <div>
+                  <h3 className="text-xs font-medium mb-2">Chỉ số tài chính</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">ROE</span>
+                        <span className="text-xs text-green-500">22.5%</span>
+                      </div>
+                      <Progress value={78} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">ROA</span>
+                        <span className="text-xs text-green-500">10.8%</span>
+                      </div>
+                      <Progress value={45} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">ROIC</span>
+                        <span className="text-xs text-green-500">15.2%</span>
+                      </div>
+                      <Progress value={52} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">EPS</span>
+                        <span className="text-xs text-green-500">12.8</span>
+                      </div>
+                      <Progress value={68} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">BVPS</span>
+                        <span className="text-xs text-green-500">250đ</span>
+                      </div>
+                      <Progress value={58} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* DuPont Analysis */}
+          <Card className="bg-slate-900 border-slate-800">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <TrendingUp className="w-6 h-6 text-blue-400" />
+                <CardTitle className="text-xl text-white">Phân tích DuPont</CardTitle>
+              </div>
+              <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+                <MoreHorizontal className="w-5 h-5" />
+              </Button>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="flex flex-col items-center">
+                {/* ROE Section */}
+                <div className="text-center mb-6">
+                  <div className="text-sm font-medium text-slate-300">ROE</div>
+                  <div className="text-2xl font-bold text-blue-400">22.5%</div>
+                </div>
+                
+                {/* Separator */}
+                <div className="flex items-center justify-center w-full mb-6">
+                  <div className="w-1/3 h-px bg-slate-700"></div>
+                  <div className="mx-3 text-slate-500 font-medium">×</div>
+                  <div className="w-1/3 h-px bg-slate-700"></div>
+                </div>
+
+                {/* Main Metrics */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 w-full">
+                  <div className="text-center bg-slate-800/50 rounded-lg p-4">
+                    <div className="text-sm font-medium text-slate-300 mb-2">Net Profit Margin</div>
+                    <div className="text-xl font-bold text-green-400 mb-3">35.2%</div>
+                    <div className="flex flex-col items-center">
+                      <div className="text-xs text-slate-500">Net Income</div>
+                      <div className="w-12 h-px bg-slate-600 my-1"></div>
+                      <div className="text-xs text-slate-500 mb-2">Revenue</div>
+                      <div className="text-sm font-medium text-slate-300">7,500 / 21,300</div>
+                    </div>
+                  </div>
+                  
+                  <div className="text-center bg-slate-800/50 rounded-lg p-4">
+                    <div className="text-sm font-medium text-slate-300 mb-2">Asset Turnover</div>
+                    <div className="text-xl font-bold text-yellow-400 mb-3">0.64x</div>
+                    <div className="flex flex-col items-center">
+                      <div className="text-xs text-slate-500">Revenue</div>
+                      <div className="w-12 h-px bg-slate-600 my-1"></div>
+                      <div className="text-xs text-slate-500 mb-2">Total Assets</div>
+                      <div className="text-sm font-medium text-slate-300">21,300 / 33,280</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Separator */}
+                <div className="flex items-center justify-center w-full mb-6">
+                  <div className="w-1/3 h-px bg-slate-700"></div>
+                  <div className="mx-3 text-slate-500 font-medium">×</div>
+                  <div className="w-1/3 h-px bg-slate-700"></div>
+                </div>
+
+                {/* Detail Metrics */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+                  <div className="text-center bg-slate-800/30 rounded-lg p-3">
+                    <div className="text-sm font-medium text-slate-300 mb-1">Operating Margin</div>
+                    <div className="text-lg font-bold text-purple-400 mb-2">42.5%</div>
+                    <div className="text-xs text-slate-500">9,052 / 21,300</div>
+                  </div>
+                  
+                  <div className="text-center bg-slate-800/30 rounded-lg p-3">
+                    <div className="text-sm font-medium text-slate-300 mb-1">Tax Burden</div>
+                    <div className="text-lg font-bold text-orange-400 mb-2">82.8%</div>
+                    <div className="text-xs text-slate-500">7,500 / 9,052</div>
+                  </div>
+                  
+                  <div className="text-center bg-slate-800/30 rounded-lg p-3">
+                    <div className="text-sm font-medium text-slate-300 mb-1">Financial Leverage</div>
+                    <div className="text-lg font-bold text-pink-400 mb-2">1.56x</div>
+                    <div className="text-xs text-slate-500">33,280 / 21,330</div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Momentum Rank */}
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div className="flex items-center gap-3">
+                <BarChart3 className="w-6 h-6 text-blue-400" />
+                <CardTitle className="text-xl text-white">Xếp hạng Momentum</CardTitle>
+              </div>
+              <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+                <MoreHorizontal className="w-5 h-5" />
+              </Button>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-xs text-gray-500">Cập nhật: 20/06/2025</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Chỉ báo kỹ thuật */}
+                <div>
+                  <h3 className="text-xs font-medium mb-2">Chỉ báo kỹ thuật</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">RSI (14)</span>
+                        <span className="text-xs text-slate-300">72.5</span>
+                      </div>
+                      <Progress value={72} />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">MACD</span>
+                        <span className="text-xs text-green-500">Tăng</span>
+                      </div>
+                      <Progress value={65} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">MA (20)</span>
+                        <span className="text-xs text-green-500">Trên</span>
+                      </div>
+                      <Progress value={85} />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">MA (50)</span>
+                        <span className="text-xs text-green-500">Trên</span>
+                      </div>
+                      <Progress value={32} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">Bollinger</span>
+                        <span className="text-xs text-red-500">Trên dải</span>
+                      </div>
+                      <Progress value={78} />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">Stochastic</span>
+                        <span className="text-xs text-red-500">Quá mua</span>
+                      </div>
+                      <Progress value={58} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                  </div>
+                </div>
+                {/* Biến động giá */}
+                <div>
+                  <h3 className="text-xs font-medium mb-2">Biến động giá</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">ATR (14)</span>
+                        <span className="text-xs text-slate-300">12.8</span>
+                      </div>
+                      <Progress value={72} />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">Volatility (30)</span>
+                        <span className="text-xs text-slate-300">15.2%</span>
+                      </div>
+                      <Progress value={65} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">Beta (1Y)</span>
+                        <span className="text-xs text-slate-300">1.2</span>
+                      </div>
+                      <Progress value={85} />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">Sharpe Ratio</span>
+                        <span className="text-xs text-slate-300">0.8</span>
+                      </div>
+                      <Progress value={32} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">Sortino Ratio</span>
+                        <span className="text-xs text-slate-300">1.2</span>
+                      </div>
+                      <Progress value={78} />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">Max Drawdown</span>
+                        <span className="text-xs text-slate-300">-25.8%</span>
+                      </div>
+                      <Progress value={58} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Dividend & Yield Rank */}
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div className="flex items-center gap-3">
+                <BarChart3 className="w-6 h-6 text-blue-400" />
+                <CardTitle className="text-xl text-white">Xếp hạng cổ tức & Lợi suất</CardTitle>
+              </div>
+              <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+                <MoreHorizontal className="w-5 h-5" />
+              </Button>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-xs text-gray-500">Cập nhật: 20/06/2025</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Cổ tức tiền mặt */}
+                <div>
+                  <h3 className="text-xs font-medium mb-2">Cổ tức tiền mặt (theo năm)</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">2024</span>
+                        <span className="text-xs text-slate-300">12.8</span>
+                      </div>
+                      <Progress value={72} />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">2023</span>
+                        <span className="text-xs text-slate-300">11.2</span>
+                      </div>
+                      <Progress value={65} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">2022</span>
+                        <span className="text-xs text-slate-300">10.5</span>
+                      </div>
+                      <Progress value={85} />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">2021</span>
+                        <span className="text-xs text-slate-300">9.8</span>
+                      </div>
+                      <Progress value={32} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">2020</span>
+                        <span className="text-xs text-slate-300">8.2</span>
+                      </div>
+                      <Progress value={78} />
+                    </div>
+                  </div>
+                </div>
+                {/* Lợi suất cổ tức */}
+                <div>
+                  <h3 className="text-xs font-medium mb-2">Lợi suất cổ tức (theo mã cổ phiếu/ngành)</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">Mã cổ phiếu</span>
+                        <span className="text-xs text-slate-300">7.8%</span>
+                      </div>
+                      <Progress value={72} />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">Ngành</span>
+                        <span className="text-xs text-slate-300">6.5%</span>
+                      </div>
+                      <Progress value={65} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">VN Index</span>
+                        <span className="text-xs text-slate-300">5.2%</span>
+                      </div>
+                      <Progress value={85} />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">VN30</span>
+                        <span className="text-xs text-slate-300">4.8%</span>
+                      </div>
+                      <Progress value={32} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs w-24 text-slate-400">HNX</span>
+                        <span className="text-xs text-slate-300">3.5%</span>
+                      </div>
+                      <Progress value={78} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Personal Strength */}
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-xl text-white">Điểm mạnh</CardTitle>
+              <span className="text-xs text-gray-500">Cập nhật: 18/06/2025</span>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {[
+                  { label: "Tăng trưởng doanh thu", value: 85 },
+                  { label: "Biên lợi nhuận", value: 72 },
+                  { label: "ROE", value: 68 },
+                  { label: "Chất lượng tài sản", value: 76 },
+                  { label: "Thanh khoản", value: 82 },
+                  { label: "Quản trị rủi ro", value: 79 },
+                  { label: "Chuyển đổi số", value: 90 }
+                ].map((item, idx) => (
+                  <div key={idx}>
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-xs font-medium">{item.label}</span>
+                      <span className="text-xs font-medium">{item.value}%</span>
+                    </div>
+                    <Progress value={item.value} />
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Profitability Rank */}
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-xl text-white">Xếp hạng khả năng sinh lời</CardTitle>
+              <span className="text-xs text-gray-500">So với ngành</span>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {[
+                  { label: "ROE", value: 85, text: "22.5%" },
+                  { label: "ROA", value: 75, text: "1.8%" },
+                  { label: "NIM", value: 80, text: "4.2%" },
+                  { label: "CIR", value: 70, text: "35.8%" },
+                  { label: "CASA", value: 60, text: "22.4%" },
+                  { label: "Tỷ lệ nợ xấu", value: 82, text: "1.2%" }
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-center">
+                    <span className="text-xs w-28">{item.label}</span>
+                    <div className="flex-1 flex items-center">
+                      <div className="w-full bg-gray-200 h-4 rounded-sm overflow-hidden">
+                        <div className={`${item.value}%`} style={{ width: `${item.value}%` }}></div>
+                      </div>
+                      <span className="ml-2 text-xs font-medium">{item.text}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* EPS Rank */}
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-xl text-white">Xếp hạng EPS</CardTitle>
+              <span className="text-xs text-gray-500">So với Top 10 ngân hàng</span>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {[
+                  { label: "VCB", value: 95, text: "7,250" },
+                  { label: "TCB", value: 92, text: "6,820" },
+                  { label: "MBB", value: 88, text: "6,450" },
+                  { label: "MIL", value: 85, text: "6,120", highlight: true },
+                  { label: "ACB", value: 82, text: "5,980" },
+                  { label: "VPB", value: 78, text: "5,640" },
+                  { label: "HDB", value: 65, text: "4,850" }
+                ].map((item, idx) => (
+                  <div key={idx} className={`flex items-center${item.highlight ? " font-medium text-primary" : ""}`}>
+                    <span className={`text-xs w-28${item.highlight ? " text-primary" : ""}`}>{item.label}</span>
+                    <div className="flex-1 flex items-center">
+                      <div className="w-full bg-gray-200 h-4 rounded-sm overflow-hidden">
+                        <div className={`${item.highlight ? "bg-primary" : "bg-green-500"} h-full`} style={{ width: `${item.value}%` }}></div>
+                      </div>
+                      <span className={`ml-2 text-xs font-medium${item.highlight ? " text-primary" : ""}`}>{item.text}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Warning Signs */}
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-xl text-white">Tín hiệu cảnh báo</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Alert variant="destructive" className="mb-4">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>Giá cổ phiếu đã tăng 15% trong 5 phiên gần nhất</AlertTitle>
+                <AlertDescription>
+                  Có thể xuất hiện áp lực chốt lời trong ngắn hạn.
+                </AlertDescription>
+              </Alert>
+              <div className="space-y-3">
+                {[
+                  { color: "green", text: "RSI (14) đang ở vùng quá mua", value: "72.5" },
+                  { color: "green", text: "Khối ngoại bán ròng 5 phiên liên tiếp", value: "-125 tỷ" },
+                  { color: "yellow", text: "P/E cao hơn trung bình ngành", value: "+12%" },
+                  { color: "yellow", text: "Tỷ lệ dự phòng/nợ xấu giảm nhẹ", value: "-2.5%" },
+                  { color: "red", text: "Biến động giá cao hơn trung bình 20 phiên", value: "+35%" }
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-center">
+                    <div className={`w-2 h-2 bg-${item.color}-500 rounded-full mr-2`}></div>
+                    <span className="text-xs flex-1">{item.text}</span>
+                    <span className="text-xs font-medium">{item.value}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Ownership & Insider Details */}
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-xl text-white">Sở hữu & Giao dịch nội bộ</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-xs font-medium mb-2">Cơ cấu sở hữu</h3>
+                  <div ref={ownershipChartRef} className="h-40 w-full" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-medium mb-2">So sánh P/E</h3>
+                  <div ref={peComparisonChartRef} className="h-24 w-full" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Key Ratios */}
+          <Card className="bg-slate-900/50 border-slate-800">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-xl text-white">Các tỷ số chính</CardTitle>
+              <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+                <MoreHorizontal className="w-5 h-5" />
+              </Button>
+            </CardHeader>
+            <CardContent className="p-6 space-y-6">
+              {/* Hiệu quả hoạt động */}
+              <div>
+                <h3 className="text-xs font-medium mb-2">Hiệu quả hoạt động</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
+                    <span className="text-xs text-gray-500">ROE</span>
+                    <span className="text-xs text-gray-500 font-medium">22.5%</span>
+                  </div>
+                  <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
+                    <span className="text-xs text-gray-500">ROA</span>
+                    <span className="text-xs text-gray-500 font-medium">1.8%</span>
+                  </div>
+                  <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
+                    <span className="text-xs text-gray-500">NIM</span>
+                    <span className="text-xs text-gray-500 font-medium">4.2%</span>
+                  </div>
+                  <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
+                    <span className="text-xs text-gray-500">CIR</span>
+                    <span className="text-xs text-gray-500 font-medium">35.8%</span>
+                  </div>
+                </div>
+              </div>
+              {/* Chất lượng tài sản */}
+              <div>
+                <h3 className="text-xs font-medium mb-2">Chất lượng tài sản</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
+                    <span className="text-xs text-gray-500">NPL</span>
+                    <span className="text-xs text-gray-500 font-medium">1.2%</span>
+                  </div>
+                  <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
+                    <span className="text-xs text-gray-500">LLR/NPL</span>
+                    <span className="text-xs text-gray-500 font-medium">165%</span>
+                  </div>
+                  <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
+                    <span className="text-xs text-gray-500">Credit cost</span>
+                    <span className="text-xs text-gray-500 font-medium">1.1%</span>
+                  </div>
+                  <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
+                    <span className="text-xs text-gray-500">Nợ xấu nhóm 2</span>
+                    <span className="text-xs text-gray-500 font-medium">1.8%</span>
+                  </div>
+                </div>
+              </div>
+              {/* Thanh khoản & Vốn */}
+              <div>
+                <h3 className="text-xs font-medium mb-2">Thanh khoản & Vốn</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
+                    <span className="text-xs text-gray-500">LDR</span>
+                    <span className="text-xs text-gray-500 font-medium">78.5%</span>
+                  </div>
+                  <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
+                    <span className="text-xs text-gray-500">CAR</span>
+                    <span className="text-xs text-gray-500 font-medium">12.8%</span>
+                  </div>
+                  <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
+                    <span className="text-xs text-gray-500">CASA</span>
+                    <span className="text-xs text-gray-500 font-medium">22.4%</span>
+                  </div>
+                  <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
+                    <span className="text-xs text-gray-500">Tier 1 ratio</span>
+                    <span className="text-xs text-gray-500 font-medium">10.5%</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </Layout>
   );
@@ -1011,4 +2000,4 @@ declare global {
   interface Window {
     echarts: any;
   }
-} 
+}
