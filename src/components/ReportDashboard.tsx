@@ -34,7 +34,6 @@ export const ReportDashboard = () => {
   const [reportAnalysis, setReportAnalysis] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [htmlContent, setHtmlContent] = useState<string>('');
   const [selectedReport, setSelectedReport] = useState<PlaylistItem | null>(null);
 
   const playlistItems: PlaylistItem[] = [
@@ -97,15 +96,6 @@ export const ReportDashboard = () => {
     };
     fetchLatestAnalysis();
   }, []);
-
-  // Load n8ndashboard.html content when dialog opens and Q4 Market Analysis is selected
-  useEffect(() => {
-    if (dialogOpen && selectedReport?.id === '1') {
-      fetch('/n8ndashboard.html')
-        .then((res) => res.text())
-        .then((html) => setHtmlContent(html));
-    }
-  }, [dialogOpen, selectedReport]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 p-6">
@@ -238,9 +228,7 @@ export const ReportDashboard = () => {
                 <DialogContent className="max-w-3xl w-full">
                   {selectedReport?.id === '1' ? (
                     <>
-                      <div className="overflow-y-auto max-h-[70vh] border rounded-lg bg-white p-4 text-black">
-                        <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
-                      </div>
+                      <div className="text-2xl font-bold text-center mb-4">Test thành công</div>
                       <div className="flex justify-end mt-4">
                         <Button
                           onClick={() => window.location.href = 'https://www.npmjs.com/package/n8n-nodes-pdfco'}
