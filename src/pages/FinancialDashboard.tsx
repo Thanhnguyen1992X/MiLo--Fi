@@ -40,6 +40,7 @@ export const FinancialDashboard = () => {
   const technicalChartRef = useRef<HTMLDivElement>(null);
   const ownershipChartRef = useRef<HTMLDivElement>(null);
   const peComparisonChartRef = useRef<HTMLDivElement>(null);
+  const tradingViewRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const [showWidgetMenu, setShowWidgetMenu] = useState(false);
 
@@ -57,6 +58,33 @@ export const FinancialDashboard = () => {
     };
 
     loadECharts();
+  }, []);
+
+  useEffect(() => {
+    if (!tradingViewRef.current) return;
+    // Xóa widget cũ nếu có
+    tradingViewRef.current.innerHTML = '';
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.async = true;
+    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
+    script.innerHTML = `{
+      "autosize": true,
+      "symbol": "NASDAQ:AAPL",
+      "timezone": "Etc/UTC",
+      "theme": "light",
+      "style": "1",
+      "locale": "en",
+      "range": "YTD",
+      "allow_symbol_change": true,
+      "details": true,
+      "hotlist": true,
+      "show_popup_button": true,
+      "popup_width": "1198",
+      "popup_height": "1200",
+      "support_host": "https://www.tradingview.com"
+    }`;
+    tradingViewRef.current.appendChild(script);
   }, []);
 
   const initializeCharts = () => {
@@ -577,6 +605,33 @@ export const FinancialDashboard = () => {
           <CardContent>
             <div ref={mainChartRef} className="w-full h-96"></div>
             <div className="flex items-center justify-between pt-4 border-t border-slate-700">
+              <div className="flex items-center space-x-4">
+                <Button variant="outline" size="sm" className="bg-green-500/10 hover:bg-green-500/20 text-green-400 border-green-500/20">
+                  <TrendingUp className="w-4 h-4 mr-2" />
+                  Buy
+                </Button>
+                <Button variant="outline" size="sm" className="bg-red-500/10 hover:bg-red-500/20 text-red-400 border-red-500/20">
+                  <TrendingDown className="w-4 h-4 mr-2" />
+                  Sell
+                </Button>
+              </div>
+              <div className="flex items-center space-x-4 text-sm text-slate-400">
+                <span>Spread: 0.9 pips</span>
+                <span>Volume: 127.4K</span>
+                <span>Range: 1.0821 - 1.0859</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* TradingView Widget */}
+        <Card className="bg-slate-900/50 border-slate-800">
+          <CardHeader>
+            <CardTitle className="text-white">Biểu đồ nâng cao TradingView</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div ref={tradingViewRef} className="w-full h-96" />
+            <div className="flex items-center justify-between pt-4 border-t border-slate-700 mt-4">
               <div className="flex items-center space-x-4">
                 <Button variant="outline" size="sm" className="bg-green-500/10 hover:bg-green-500/20 text-green-400 border-green-500/20">
                   <TrendingUp className="w-4 h-4 mr-2" />
