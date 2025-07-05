@@ -1,10 +1,10 @@
-
 import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MarketType, ScreenerFilters } from './ScreenerDashboard';
 import { TrendingUp, TrendingDown, Star, Eye, Download, Bookmark } from 'lucide-react';
+import * as XLSX from 'xlsx';
 
 interface ResultsTableProps {
   selectedMarket: MarketType;
@@ -57,6 +57,26 @@ export const ResultsTable = ({ selectedMarket, filters, results, isLoading }: Re
     setWatchlist(newWatchlist);
   };
 
+  const handleExportExcel = () => {
+    // Chỉ xuất cho bảng cổ phiếu
+    if (selectedMarket !== 'stocks') return;
+    const wsData = [
+      ['Mã CK', 'Tên công ty', 'Giá', 'Thay đổi', 'Khối lượng', 'Ngành'],
+      ...mockStockData.map(stock => [
+        stock.symbol,
+        stock.name,
+        stock.price,
+        stock.change,
+        stock.volume,
+        stock.sector
+      ])
+    ];
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'KQ Sàng lọc');
+    XLSX.writeFile(wb, 'ket-qua-sang-loc.xlsx');
+  };
+
   const renderStockTable = () => (
     <div className="overflow-x-auto">
       <table className="w-full">
@@ -93,7 +113,7 @@ export const ResultsTable = ({ selectedMarket, filters, results, isLoading }: Re
                 {stock.volume.toLocaleString()}
               </td>
               <td className="py-3 px-4 text-center">
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="outline" className="text-xs text-white">
                   {stock.sector}
                 </Badge>
               </td>
@@ -211,7 +231,7 @@ export const ResultsTable = ({ selectedMarket, filters, results, isLoading }: Re
           Tìm thấy {selectedMarket === 'stocks' ? mockStockData.length : 
                    selectedMarket === 'real-estate' ? mockRealEstateData.length : 0} kết quả
         </div>
-        <Button variant="outline" size="sm" className="bg-slate-700 border-slate-600">
+        <Button variant="outline" size="sm" className="bg-slate-700 border-slate-600" onClick={handleExportExcel}>
           <Download className="w-4 h-4 mr-2" />
           Xuất Excel
         </Button>
