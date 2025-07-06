@@ -1349,45 +1349,45 @@ export const FinancialDashboard = () => {
             </CardHeader>
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <span className="text-xs text-gray-500">Cập nhật: 20/06/2025</span>
+                <span className="text-xs text-white">Cập nhật: 20/06/2025</span>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Cổ tức tiền mặt */}
                 <div>
-                  <h3 className="text-xs font-medium mb-2">Cổ tức tiền mặt (theo năm)</h3>
+                  <h3 className="text-xs font-medium mb-2 text-white">Cổ tức tiền mặt (theo năm)</h3>
                   <div className="space-y-4">
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs w-24 text-slate-400">2024</span>
-                        <span className="text-xs text-slate-300">12.8</span>
+                        <span className="text-xs w-24 text-white">2024</span>
+                        <span className="text-xs text-white">12.8</span>
                       </div>
                       <Progress value={72} />
                     </div>
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs w-24 text-slate-400">2023</span>
-                        <span className="text-xs text-slate-300">11.2</span>
+                        <span className="text-xs w-24 text-white">2023</span>
+                        <span className="text-xs text-white">11.2</span>
                       </div>
                       <Progress value={65} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
                     </div>
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs w-24 text-slate-400">2022</span>
-                        <span className="text-xs text-slate-300">10.5</span>
+                        <span className="text-xs w-24 text-white">2022</span>
+                        <span className="text-xs text-white">10.5</span>
                       </div>
                       <Progress value={85} />
                     </div>
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs w-24 text-slate-400">2021</span>
-                        <span className="text-xs text-slate-300">9.8</span>
+                        <span className="text-xs w-24 text-white">2021</span>
+                        <span className="text-xs text-white">9.8</span>
                       </div>
                       <Progress value={32} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
                     </div>
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs w-24 text-slate-400">2020</span>
-                        <span className="text-xs text-slate-300">8.2</span>
+                        <span className="text-xs w-24 text-white">2020</span>
+                        <span className="text-xs text-white">8.2</span>
                       </div>
                       <Progress value={78} />
                     </div>
@@ -1395,40 +1395,40 @@ export const FinancialDashboard = () => {
                 </div>
                 {/* Lợi suất cổ tức */}
                 <div>
-                  <h3 className="text-xs font-medium mb-2">Lợi suất cổ tức (theo mã cổ phiếu/ngành)</h3>
+                  <h3 className="text-xs font-medium mb-2 text-white">Lợi suất cổ tức (theo mã cổ phiếu/ngành)</h3>
                   <div className="space-y-4">
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs w-24 text-slate-400">Mã cổ phiếu</span>
-                        <span className="text-xs text-slate-300">7.8%</span>
+                        <span className="text-xs w-24 text-white">Mã cổ phiếu</span>
+                        <span className="text-xs text-white">7.8%</span>
                       </div>
                       <Progress value={72} />
                     </div>
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs w-24 text-slate-400">Ngành</span>
-                        <span className="text-xs text-slate-300">6.5%</span>
+                        <span className="text-xs w-24 text-white">Ngành</span>
+                        <span className="text-xs text-white">6.5%</span>
                       </div>
                       <Progress value={65} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
                     </div>
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs w-24 text-slate-400">VN Index</span>
-                        <span className="text-xs text-slate-300">5.2%</span>
+                        <span className="text-xs w-24 text-white">VN Index</span>
+                        <span className="text-xs text-white">5.2%</span>
                       </div>
                       <Progress value={85} />
                     </div>
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs w-24 text-slate-400">VN30</span>
-                        <span className="text-xs text-slate-300">4.8%</span>
+                        <span className="text-xs w-24 text-white">VN30</span>
+                        <span className="text-xs text-white">4.8%</span>
                       </div>
                       <Progress value={32} className="bg-gray-200 [&_.bg-primary]:bg-green-500" />
                     </div>
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs w-24 text-slate-400">HNX</span>
-                        <span className="text-xs text-slate-300">3.5%</span>
+                        <span className="text-xs w-24 text-white">HNX</span>
+                        <span className="text-xs text-white">3.5%</span>
                       </div>
                       <Progress value={78} />
                     </div>
@@ -1442,7 +1442,7 @@ export const FinancialDashboard = () => {
           <Card className="bg-slate-900/50 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-xl text-white">Điểm mạnh</CardTitle>
-              <span className="text-xs text-gray-500">Cập nhật: 18/06/2025</span>
+              <span className="text-xs text-white">Cập nhật: 18/06/2025</span>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -1457,8 +1457,8 @@ export const FinancialDashboard = () => {
                 ].map((item, idx) => (
                   <div key={idx}>
                     <div className="flex justify-between items-center mb-1">
-                      <span className="text-xs font-medium">{item.label}</span>
-                      <span className="text-xs font-medium">{item.value}%</span>
+                      <span className="text-xs font-medium text-white">{item.label}</span>
+                      <span className="text-xs font-medium text-white">{item.value}%</span>
                     </div>
                     <Progress value={item.value} />
                   </div>
@@ -1471,7 +1471,7 @@ export const FinancialDashboard = () => {
           <Card className="bg-slate-900/50 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-xl text-white">Xếp hạng khả năng sinh lời</CardTitle>
-              <span className="text-xs text-gray-500">So với ngành</span>
+              <span className="text-xs text-white">So với ngành</span>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -1484,12 +1484,12 @@ export const FinancialDashboard = () => {
                   { label: "Tỷ lệ nợ xấu", value: 82, text: "1.2%" }
                 ].map((item, idx) => (
                   <div key={idx} className="flex items-center">
-                    <span className="text-xs w-28">{item.label}</span>
+                    <span className="text-xs w-28 text-white">{item.label}</span>
                     <div className="flex-1 flex items-center">
                       <div className="w-full bg-gray-200 h-4 rounded-sm overflow-hidden">
                         <div className={`${item.value}%`} style={{ width: `${item.value}%` }}></div>
                       </div>
-                      <span className="ml-2 text-xs font-medium">{item.text}</span>
+                      <span className="ml-2 text-xs font-medium text-white">{item.text}</span>
                     </div>
                   </div>
                 ))}
@@ -1501,7 +1501,7 @@ export const FinancialDashboard = () => {
           <Card className="bg-slate-900/50 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-xl text-white">Xếp hạng EPS</CardTitle>
-              <span className="text-xs text-gray-500">So với Top 10 ngân hàng</span>
+              <span className="text-xs text-white">So với Top 10 ngân hàng</span>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -1515,12 +1515,12 @@ export const FinancialDashboard = () => {
                   { label: "HDB", value: 65, text: "4,850" }
                 ].map((item, idx) => (
                   <div key={idx} className={`flex items-center${item.highlight ? " font-medium text-primary" : ""}`}>
-                    <span className={`text-xs w-28${item.highlight ? " text-primary" : ""}`}>{item.label}</span>
+                    <span className={`text-xs w-28${item.highlight ? " text-primary" : " text-white"}`}>{item.label}</span>
                     <div className="flex-1 flex items-center">
                       <div className="w-full bg-gray-200 h-4 rounded-sm overflow-hidden">
                         <div className={`${item.highlight ? "bg-primary" : "bg-green-500"} h-full`} style={{ width: `${item.value}%` }}></div>
                       </div>
-                      <span className={`ml-2 text-xs font-medium${item.highlight ? " text-primary" : ""}`}>{item.text}</span>
+                      <span className={`ml-2 text-xs font-medium${item.highlight ? " text-primary" : " text-white"}`}>{item.text}</span>
                     </div>
                   </div>
                 ))}
@@ -1536,8 +1536,8 @@ export const FinancialDashboard = () => {
             <CardContent>
               <Alert variant="destructive" className="mb-4">
                 <AlertTriangle className="h-4 w-4" />
-                <AlertTitle>Giá cổ phiếu đã tăng 15% trong 5 phiên gần nhất</AlertTitle>
-                <AlertDescription>
+                <AlertTitle className="text-white">Giá cổ phiếu đã tăng 15% trong 5 phiên gần nhất</AlertTitle>
+                <AlertDescription className="text-white">
                   Có thể xuất hiện áp lực chốt lời trong ngắn hạn.
                 </AlertDescription>
               </Alert>
@@ -1551,8 +1551,8 @@ export const FinancialDashboard = () => {
                 ].map((item, idx) => (
                   <div key={idx} className="flex items-center">
                     <div className={`w-2 h-2 bg-${item.color}-500 rounded-full mr-2`}></div>
-                    <span className="text-xs flex-1">{item.text}</span>
-                    <span className="text-xs font-medium">{item.value}</span>
+                    <span className="text-xs flex-1 text-white">{item.text}</span>
+                    <span className="text-xs font-medium text-white">{item.value}</span>
                   </div>
                 ))}
               </div>
@@ -1605,67 +1605,67 @@ export const FinancialDashboard = () => {
             <CardContent className="p-6 space-y-6">
               {/* Hiệu quả hoạt động */}
               <div>
-                <h3 className="text-xs font-medium mb-2">Hiệu quả hoạt động</h3>
+                <h3 className="text-xs font-medium mb-2 text-white">Hiệu quả hoạt động</h3>
                 <div className="grid grid-cols-2 gap-2">
                   <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
-                    <span className="text-xs text-gray-500">ROE</span>
-                    <span className="text-xs text-gray-500 font-medium">22.5%</span>
+                     <span className="text-xs text-black">ROE</span>
+                     <span className="text-xs text-black font-medium">22.5%</span>
                   </div>
                   <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
-                    <span className="text-xs text-gray-500">ROA</span>
-                    <span className="text-xs text-gray-500 font-medium">1.8%</span>
+                     <span className="text-xs text-black">ROA</span>
+                     <span className="text-xs text-black font-medium">1.8%</span>
                   </div>
                   <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
-                    <span className="text-xs text-gray-500">NIM</span>
-                    <span className="text-xs text-gray-500 font-medium">4.2%</span>
+                     <span className="text-xs text-black">NIM</span>
+                     <span className="text-xs text-black font-medium">4.2%</span>
                   </div>
                   <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
-                    <span className="text-xs text-gray-500">CIR</span>
-                    <span className="text-xs text-gray-500 font-medium">35.8%</span>
+                     <span className="text-xs text-black">CIR</span>
+                     <span className="text-xs text-black font-medium">35.8%</span>
                   </div>
                 </div>
               </div>
               {/* Chất lượng tài sản */}
               <div>
-                <h3 className="text-xs font-medium mb-2">Chất lượng tài sản</h3>
+                <h3 className="text-xs font-medium mb-2 text-white">Chất lượng tài sản</h3>
                 <div className="grid grid-cols-2 gap-2">
                   <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
-                    <span className="text-xs text-gray-500">NPL</span>
-                    <span className="text-xs text-gray-500 font-medium">1.2%</span>
+                     <span className="text-xs text-black">NPL</span>
+                     <span className="text-xs text-black font-medium">1.2%</span>
                   </div>
                   <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
-                    <span className="text-xs text-gray-500">LLR/NPL</span>
-                    <span className="text-xs text-gray-500 font-medium">165%</span>
+                     <span className="text-xs text-black">LLR/NPL</span>
+                     <span className="text-xs text-black font-medium">165%</span>
                   </div>
                   <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
-                    <span className="text-xs text-gray-500">Credit cost</span>
-                    <span className="text-xs text-gray-500 font-medium">1.1%</span>
+                     <span className="text-xs text-black">Credit cost</span>
+                     <span className="text-xs text-black font-medium">1.1%</span>
                   </div>
                   <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
-                    <span className="text-xs text-gray-500">Nợ xấu nhóm 2</span>
-                    <span className="text-xs text-gray-500 font-medium">1.8%</span>
+                     <span className="text-xs text-black">Nợ xấu nhóm 2</span>
+                     <span className="text-xs text-black font-medium">1.8%</span>
                   </div>
                 </div>
               </div>
               {/* Thanh khoản & Vốn */}
               <div>
-                <h3 className="text-xs font-medium mb-2">Thanh khoản & Vốn</h3>
+                <h3 className="text-xs font-medium mb-2 text-white">Thanh khoản & Vốn</h3>
                 <div className="grid grid-cols-2 gap-2">
                   <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
-                    <span className="text-xs text-gray-500">LDR</span>
-                    <span className="text-xs text-gray-500 font-medium">78.5%</span>
+                     <span className="text-xs text-black">LDR</span>
+                     <span className="text-xs text-black font-medium">78.5%</span>
                   </div>
                   <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
-                    <span className="text-xs text-gray-500">CAR</span>
-                    <span className="text-xs text-gray-500 font-medium">12.8%</span>
+                     <span className="text-xs text-black">CAR</span>
+                     <span className="text-xs text-black font-medium">12.8%</span>
                   </div>
                   <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
-                    <span className="text-xs text-gray-500">CASA</span>
-                    <span className="text-xs text-gray-500 font-medium">22.4%</span>
+                     <span className="text-xs text-black">CASA</span>
+                     <span className="text-xs text-black font-medium">22.4%</span>
                   </div>
                   <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 p-2 rounded">
-                    <span className="text-xs text-gray-500">Tier 1 ratio</span>
-                    <span className="text-xs text-gray-500 font-medium">10.5%</span>
+                     <span className="text-xs text-black">Tier 1 ratio</span>
+                     <span className="text-xs text-black font-medium">10.5%</span>
                   </div>
                 </div>
               </div>
